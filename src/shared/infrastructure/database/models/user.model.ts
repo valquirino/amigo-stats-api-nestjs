@@ -9,7 +9,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-export interface UserAttributes {
+export interface IUserAttributes {
   id: number;
   name: string;
   password: string;
@@ -27,7 +27,7 @@ export interface UserAttributes {
   createdAt: 'created_at',
   deletedAt: 'deleted_at',
 })
-export class User extends Model<UserAttributes> {
+export class User extends Model<IUserAttributes> {
   @PrimaryKey
   @AutoIncrement
   @Column({
@@ -50,9 +50,9 @@ export class User extends Model<UserAttributes> {
 
   @Column({
     allowNull: false,
-    type: DataType.INTEGER,
+    type: DataType.STRING,
   })
-  password: number;
+  password: string;
 
   @CreatedAt
   @Column({ field: 'created_at' })

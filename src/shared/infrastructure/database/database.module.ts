@@ -7,6 +7,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
+        // TODO: colocar todas as config no .env e validar as variaveis
         dialect: 'postgres',
         host: 'localhost',
         port: 5432,
