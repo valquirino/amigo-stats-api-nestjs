@@ -6,6 +6,7 @@ import {
 import { UsersRepository } from './../shared/infrastructure/repositories/users.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -15,11 +16,17 @@ export class UsersService {
     const userExists = await this.usersRepository.findOne({
       email: createUserDto.email,
     });
+
     if (userExists) {
       throw new BadRequestException('Usuário já cadastrado com esse e-mail.');
     }
 
-    return this.usersRepository.create(createUserDto);
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+
+    return this.usersRepository.create({
+      ...createUserDto,
+      password: hashedPassword,
+    });
   }
 
   async findAll() {

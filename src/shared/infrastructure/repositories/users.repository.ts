@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from '../database/models/user.model';
 import { IUsersRepository } from 'src/shared/interfaces/users.respository.interface';
@@ -13,7 +9,6 @@ import {
 } from 'src/shared/interfaces/users.respository.interface';
 import { WhereOptions } from 'sequelize';
 import { CreationAttributes } from 'sequelize';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersRepository implements IUsersRepository {
@@ -23,19 +18,15 @@ export class UsersRepository implements IUsersRepository {
   ) {}
 
   async create(data: ICreateUserData): Promise<IUserAttributes> {
-    console.log(data.password)
-    const hashedPassword = await bcrypt.hash(data.password, 10);
-
-    const user = await this.userModel.create({
+    return await this.userModel.create({
       ...data,
-      password: hashedPassword,
     } as CreationAttributes<User>);
-
-    return user.toJSON();
   }
 
   async findOne(filter: IUserFilter): Promise<IUserAttributes | null> {
     return this.userModel.findOne({
+      nest: true,
+      raw: true,
       where: filter as WhereOptions<IUserAttributes>,
     }) as Promise<IUserAttributes | null>;
   }

@@ -40,19 +40,19 @@ export class User extends Model<IUserAttributes> {
     allowNull: false,
     type: DataType.STRING,
   })
-  name: string;
+  declare name: string;
 
   @Column({
     allowNull: false,
     type: DataType.STRING,
   })
-  email: string;
+  declare email: string;
 
   @Column({
     allowNull: false,
     type: DataType.STRING,
   })
-  password: string;
+  declare password: string;
 
   @CreatedAt
   @Column({ field: 'created_at' })
