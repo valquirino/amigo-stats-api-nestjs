@@ -28,6 +28,10 @@ export interface IClubSearchFilter {
   league?: string;
 }
 
+export interface IClubSearchByName {
+  name?: string;
+}
+
 export interface IClubsRepository {
   create(data: ICreateClubData): Promise<IClubAttributes>;
   findAll(filter: IClubFilterFindAll): Promise<IClubAttributes[]>;
@@ -37,4 +41,5 @@ export interface IClubsRepository {
     filter: IClubSearchFilter,
   ): Promise<IClubAttributes | null>;
   findById(id: number): Promise<IClubAttributes | null>;
+  findByName(filter: IClubSearchByName): Promise<IClubAttributes | null>;
 }

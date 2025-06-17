@@ -1,21 +1,30 @@
+import { Request } from 'express';
 import {
   Controller,
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Inject,
+  Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindUserDto } from './dto/find-user.dto';
 import { Public } from 'src/shared/infrastructure/decorators/public.decorator';
+import { REQUEST } from '@nestjs/core';
+import { RequestWithUser } from 'src/shared/interfaces/request-with-user.interface';
+import { UpdatePasswordrDto } from './dto/update-password.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    @Inject(REQUEST)
+    private readonly request: RequestWithUser,
+  ) {}
 
   @Public()
   @Post()
@@ -28,18 +37,26 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param() { id }: FindUserDto) {
-    return this.usersService.findOne(id);
-  }
-
-  @Patch(':id')
-  update(@Param() { id }: FindUserDto, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  @Put('update-profile')
+  update(@Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(this.request.user.userId, updateUserDto);
   }
 
   @Delete(':id')
   remove(@Param() { id }: FindUserDto) {
     return this.usersService.remove(id);
+  }
+
+  @Get('profile')
+  getProfile() {
+    return this.usersService.renderProfile(this.request.user.userId);
+  }
+
+  @Put('update-password')
+  updatePassword(@Body() updateUserPassword: UpdatePasswordrDto) {
+    return this.usersService.updatePassword(
+      this.request.user.userId,
+      updateUserPassword,
+    );
   }
 }

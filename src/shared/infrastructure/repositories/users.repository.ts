@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from '../database/models/user.model';
-import { IUsersRepository } from 'src/shared/interfaces/users.respository.interface';
+import {
+  IGetUserById,
+  IUsersRepository,
+} from 'src/shared/interfaces/users.respository.interface';
 import { IUserAttributes } from '../database/models/user.model';
 import {
   ICreateUserData,
@@ -51,5 +54,11 @@ export class UsersRepository implements IUsersRepository {
   }
   async findByEmail(email: string): Promise<IUserAttributes | null> {
     return this.userModel.findOne({ where: { email } });
+  }
+
+  renderUserProfile(filter: IGetUserById): Promise<IUserAttributes | null> {
+    return this.userModel.findOne({
+      where: { id: filter.id },
+    });
   }
 }

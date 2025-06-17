@@ -3,11 +3,12 @@ import { Injectable } from '@nestjs/common';
 import { Player } from '../database/models/player.model';
 import {
   ICreatePlayerData,
+  IPlayerSearchFilter,
   IPlayerUserId,
   IPlayersRepository,
 } from '../../interfaces/players.repository.interface';
 import { IPlayerAttributes } from '../database/models/player.model';
-import { WhereOptions } from 'sequelize';
+import { WhereOptions, Op } from 'sequelize';
 
 @Injectable()
 export class PlayersRepository implements IPlayersRepository {
@@ -37,13 +38,36 @@ export class PlayersRepository implements IPlayersRepository {
   async delete(filter: IPlayerUserId): Promise<any> {
     return await this.playerModel.destroy({
       where: {
-        id: filter.id,
         userId: filter.userId,
       },
     });
   }
 
-  async findAll(): Promise<IPlayerAttributes[] | null> {
-    return await this.playerModel.findAll();
+  async findAllByUser(
+    filter: IPlayerUserId,
+  ): Promise<IPlayerAttributes[] | null> {
+    return await this.playerModel.findAll({
+      where: filter as WhereOptions<IPlayerAttributes>,
+    });
+  }
+
+  async findAllBySearch(
+    filter: IPlayerSearchFilter,
+  ): Promise<IPlayerAttributes[] | null> {
+    const where: WhereOptions<IPlayerAttributes> = {};
+
+    if (filter.position) {
+      where.position = { [Op.iLike]: `%${filter.position}%` };
+    }
+    if (filter.clubId) {
+      where.$clubId$ = filter.clubId;
+    }
+    if (filter.search) {
+      where.name = filter.search;
+    }
+
+    return this.playerModel.findOne({ where }) as Promise<
+      IPlayerAttributes[] | null
+    >;
   }
 }

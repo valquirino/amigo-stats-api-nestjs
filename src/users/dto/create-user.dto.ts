@@ -13,4 +13,8 @@ export class CreateUserDto {
   @MinLength(4, { message: 'A senha deve ter no mínimo 6 caracteres.' })
   @IsNotEmpty({ message: 'A senha é obrigatória.' })
   password: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'O nome é obrigatório.' })
+  role: string;
 }

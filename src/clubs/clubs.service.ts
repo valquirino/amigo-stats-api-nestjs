@@ -2,25 +2,31 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ClubsRepository } from './../shared/infrastructure/repositories/clubs.repository';
 import { CreateClubDto } from './dto/create-club.dto';
 import { UpdateClubDto } from './dto/update-club.dto';
+import { SearchFilterDto } from './dto/search-filter.dto';
 
 @Injectable()
 export class ClubsService {
   constructor(private readonly clubsRepository: ClubsRepository) {}
 
-  async create(createClubDto: CreateClubDto) {
-    return this.clubsRepository.create(createClubDto);
+  async create(createClubDto: CreateClubDto, userId: number) {
+    const club = await this.clubsRepository.findByName({
+      name: createClubDto.name,
+    });
+    if (club) {
+      return { message: 'this club already exists' };
+    }
+    return await this.clubsRepository.create({
+      ...createClubDto,
+      userId,
+    });
   }
 
   async findAll(userId: number) {
     return this.clubsRepository.findAll({ userId });
   }
 
-  async findWithSeaarchFilter(id: number) {
-    const club = await this.clubsRepository.findWithSearchFilter({
-      search: undefined,
-      country: undefined,
-      league: undefined,
-    });
+  async findWithSeaarchFilter(filter: SearchFilterDto) {
+    const club = await this.clubsRepository.findWithSearchFilter(filter);
 
     if (!club) {
       throw new NotFoundException(`Clube nao encontrado.`);
@@ -30,15 +36,11 @@ export class ClubsService {
   }
 
   async update(id: number, updateClubDto: UpdateClubDto) {
-    const updatedClub = await this.clubsRepository.update(updateClubDto, {
+    await this.findById(id);
+
+    await this.clubsRepository.update(updateClubDto, {
       id,
     });
-    if (!updatedClub) {
-      throw new NotFoundException(
-        `Clube com id ${id} não encontrado para atualização.`,
-      );
-    }
-    return updatedClub;
   }
 
   async remove(id: number) {
@@ -52,5 +54,16 @@ export class ClubsService {
     await this.clubsRepository.delete({ id });
     return { message: `Clube com id ${id} removido com sucesso.` };
   }
-  async findById(id: number) {}
+
+  async findById(id: number) {
+    const club = await this.clubsRepository.findById(id);
+
+    if (!club) {
+      throw new NotFoundException(
+        `Clube com id ${id} não encontrado para atualização.`,
+      );
+    }
+
+    return club;
+  }
 }

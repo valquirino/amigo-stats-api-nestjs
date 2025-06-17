@@ -40,7 +40,4 @@ export class CreateClubDto {
   @IsOptional()
   @IsString()
   description?: string;
-
-  @IsInt()
-  userId: number;
 }

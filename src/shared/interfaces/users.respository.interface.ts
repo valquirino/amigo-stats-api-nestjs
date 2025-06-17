@@ -11,7 +11,14 @@ export interface IUserFilter {
   name?: string;
   email?: string;
 }
+export interface IGetUserById {
+  id: number;
+}
 
+export interface IUserUpdatepa {
+  name: string;
+  email: string;
+}
 export interface IUsersRepository {
   create(data: ICreateUserData): Promise<IUserAttributes>;
   findOne(filter: IUserFilter): Promise<IUserAttributes | null>;
@@ -19,4 +26,5 @@ export interface IUsersRepository {
   update(data: Partial<ICreateUserData>, filter: IUserFilter): Promise<any>;
   delete(filter: IUserFilter): Promise<any>;
   findByEmail(email: string): Promise<IUserAttributes | null>;
+  renderUserProfile(filter: IGetUserById): Promise<IUserAttributes | null>;
 }

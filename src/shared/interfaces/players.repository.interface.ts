@@ -18,12 +18,20 @@ export interface ICreatePlayerData {
 
 export interface IPlayerUserId {
   userId: number;
-  id: number;
+}
+
+export interface IPlayerSearchFilter {
+  search?: string;
+  position?: string;
+  clubId?: number;
 }
 
 export interface IPlayersRepository {
   create(data: ICreatePlayerData): Promise<IPlayerAttributes>;
   update(data: Partial<ICreatePlayerData>, filter: IPlayerUserId): Promise<any>;
   delete(filter: IPlayerUserId): Promise<any>;
-  findAll(): Promise<IPlayerAttributes[] | null>;
+  findAllByUser(filter: IPlayerUserId): Promise<IPlayerAttributes[] | null>;
+  findAllBySearch(
+    filter?: IPlayerSearchFilter,
+  ): Promise<IPlayerAttributes[] | null>;
 }

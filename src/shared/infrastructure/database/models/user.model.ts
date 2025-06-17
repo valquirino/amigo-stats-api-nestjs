@@ -16,6 +16,7 @@ export interface IUserAttributes {
   email: string;
   createdAt?: Date;
   deletedAt?: Date | null;
+  role: 'user' | 'admin';
 }
 
 @Table({
@@ -65,4 +66,10 @@ export class User extends Model<IUserAttributes> {
     type: DataType.DATE,
   })
   declare deletedAt: Date | null;
+
+  @Column({
+    allowNull: false,
+    type: DataType.ENUM('user', 'admin'),
+  })
+  declare role: 'user' | 'admin';
 }

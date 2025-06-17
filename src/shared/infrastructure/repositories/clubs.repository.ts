@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Club } from '../database/models/club.model';
-import { IClubsRepository } from 'src/shared/interfaces/clubs.repository.interface';
+import {
+  IClubSearchByName,
+  IClubsRepository,
+} from 'src/shared/interfaces/clubs.repository.interface';
 import {
   ICreateClubData,
   IClubFilterFindAll,
@@ -68,6 +71,11 @@ export class ClubsRepository implements IClubsRepository {
     });
   }
   async findById(id: number): Promise<IClubAttributes | null> {
-    return this.clubModel.findOne({ where: { id } });
+    return this.clubModel.findOne({ where: { userId: id } });
+  }
+  async findByName(filter: IClubSearchByName): Promise<IClubAttributes | null> {
+    return this.clubModel.findOne({
+      where: filter as WhereOptions<IClubAttributes>,
+    });
   }
 }

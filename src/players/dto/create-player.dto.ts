@@ -53,7 +53,4 @@ export class CreatePlayerDto {
 
   @IsInt()
   clubId: number;
-
-  @IsInt()
-  userId: number;
 }

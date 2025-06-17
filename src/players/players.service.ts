@@ -7,8 +7,11 @@ import { UpdatePlayerDto } from './dto/update-player.dto';
 export class PlayersService {
   constructor(private readonly playersRepository: PlayersRepository) {}
 
-  create(createPlayerDto: CreatePlayerDto) {
-    return this.playersRepository.create(createPlayerDto);
+  create(createPlayerDto: CreatePlayerDto, userId: number) {
+    return this.playersRepository.create({
+      ...createPlayerDto,
+      userId,
+    });
   }
 
   findAll() {

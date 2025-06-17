@@ -2,11 +2,13 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ConflictException,
 } from '@nestjs/common';
 import { UsersRepository } from './../shared/infrastructure/repositories/users.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
+import { UpdatePasswordrDto } from './dto/update-password.dto';
 
 @Injectable()
 export class UsersService {
@@ -33,7 +35,7 @@ export class UsersService {
     return this.usersRepository.findAll();
   }
 
-  async findOne(id: number) {
+  async getCurrentUser(id: number) {
     const user = await this.usersRepository.findOne({ id });
     if (!user) {
       throw new NotFoundException(`Usuário com id ${id} não encontrado.`);
@@ -66,5 +68,38 @@ export class UsersService {
       throw new NotFoundException(`Usuário com email ${email} não encontrado.`);
     }
     return user;
+  }
+  async renderProfile(id: number) {
+    const user = await this.usersRepository.findOne({ id });
+
+    if (!user) {
+      throw new NotFoundException(`Usuário com id ${id} não encontrado.`);
+    }
+
+    return await this.usersRepository.renderUserProfile({ id });
+  }
+
+  async updatePassword(id: number, updateUserPassword: UpdatePasswordrDto) {
+    const user = await this.usersRepository.findOne({ id });
+
+    if (!user) {
+      throw new NotFoundException(`Usuário com id ${id} não encontrado.`);
+    }
+
+    const invalidPassword = await bcrypt.compare(
+      updateUserPassword.currentPassword,
+      user.password,
+    );
+
+    if (!invalidPassword) {
+      throw new ConflictException(
+        'senha passada nao corresponde com a senha atual ',
+      );
+    }
+
+    const newPassword = await bcrypt.hash(updateUserPassword.newPassword, 10);
+
+    await this.usersRepository.update({ password: newPassword }, { id });
+    return this.usersRepository.findOne({ id });
   }
 }

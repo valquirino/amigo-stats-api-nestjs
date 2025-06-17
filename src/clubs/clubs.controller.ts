@@ -12,23 +12,23 @@ import { ClubsService } from './clubs.service';
 import { CreateClubDto } from './dto/create-club.dto';
 import { UpdateClubDto } from './dto/update-club.dto';
 import { REQUEST } from '@nestjs/core';
-import { Request } from 'express';
-import { ITokenPayload } from 'src/shared/interfaces/token-payload.interface';
+import { RequestWithUser } from 'src/shared/interfaces/request-with-user.interface';
 
 @Controller('clubs')
 export class ClubsController {
   constructor(
     private readonly clubsService: ClubsService,
     @Inject(REQUEST)
-    private readonly request: Request & { user: ITokenPayload },
+    private readonly request: RequestWithUser,
   ) {}
 
   @Post()
   create(@Body() createClubDto: CreateClubDto) {
-    return this.clubsService.create(createClubDto);
+    console.log('cheguei aq ');
+    return this.clubsService.create(createClubDto, this.request.user.userId);
   }
 
-  @Get()
+  @Get('list')
   findAll() {
     return this.clubsService.findAll(this.request.user.userId);
   }
