@@ -89,7 +89,12 @@ export class Player extends Model<IPlayerAttributes> {
   declare user: User;
 
   @ForeignKey(() => Club)
-  @Column({ type: DataType.INTEGER, allowNull: false })
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   declare clubId: number;
 
   @BelongsTo(() => Club)

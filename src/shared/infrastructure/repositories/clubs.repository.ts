@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UploadedFile } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Club } from '../database/models/club.model';
 import {
@@ -66,16 +66,40 @@ export class ClubsRepository implements IClubsRepository {
   }
 
   async delete(filter: IClubFilter): Promise<void> {
+    console.log(filter.id)
     await this.clubModel.destroy({
       where: { id: filter.id },
     });
   }
+
   async findById(id: number): Promise<IClubAttributes | null> {
-    return this.clubModel.findOne({ where: { userId: id } });
+    return this.clubModel.findOne({ where: { id: id } });
   }
   async findByName(filter: IClubSearchByName): Promise<IClubAttributes | null> {
     return this.clubModel.findOne({
       where: filter as WhereOptions<IClubAttributes>,
     });
+  }
+
+  async findAllBySearch(
+    filter: IClubSearchFilter & { userId: number },
+  ): Promise<Club[]> {
+    const { userId, country, league, search } = filter;
+
+    const where: WhereOptions<IClubAttributes> = { userId };
+
+    if (country) {
+      where.country = { [Op.iLike]: `%${country}%` };
+    }
+
+    if (league) {
+      where.league = league;
+    }
+
+    if (search) {
+      where.name = { [Op.iLike]: `%${search}%` };
+    }
+
+    return this.clubModel.findAll({ where });
   }
 }

@@ -1,4 +1,7 @@
-import { IClubAttributes } from './../infrastructure/database/models/club.model';
+import {
+  Club,
+  IClubAttributes,
+} from './../infrastructure/database/models/club.model';
 
 export interface ICreateClubData {
   name: string;
@@ -42,4 +45,7 @@ export interface IClubsRepository {
   ): Promise<IClubAttributes | null>;
   findById(id: number): Promise<IClubAttributes | null>;
   findByName(filter: IClubSearchByName): Promise<IClubAttributes | null>;
+  findAllBySearch(
+    filter: IClubSearchFilter & { userId: number },
+  ): Promise<Club[]>;
 }

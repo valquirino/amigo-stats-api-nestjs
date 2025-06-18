@@ -7,12 +7,14 @@ import {
   Param,
   Delete,
   Inject,
+  Put,
 } from '@nestjs/common';
 import { ClubsService } from './clubs.service';
 import { CreateClubDto } from './dto/create-club.dto';
 import { UpdateClubDto } from './dto/update-club.dto';
 import { REQUEST } from '@nestjs/core';
 import { RequestWithUser } from 'src/shared/interfaces/request-with-user.interface';
+import { SearchFilterDto } from './dto/search-filter.dto';
 
 @Controller('clubs')
 export class ClubsController {
@@ -24,7 +26,6 @@ export class ClubsController {
 
   @Post()
   create(@Body() createClubDto: CreateClubDto) {
-    console.log('cheguei aq ');
     return this.clubsService.create(createClubDto, this.request.user.userId);
   }
 
@@ -37,7 +38,7 @@ export class ClubsController {
     return this.clubsService.findById(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateClubDto: UpdateClubDto) {
     return this.clubsService.update(+id, updateClubDto);
   }
@@ -45,5 +46,13 @@ export class ClubsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.clubsService.remove(+id);
+  }
+
+  @Post('filter')
+  listClubsWithSearchFilters(@Body() searchFilterdto: SearchFilterDto) {
+    return this.clubsService.listWithSearchFilter(
+      searchFilterdto,
+      this.request.user.userId,
+    );
   }
 }

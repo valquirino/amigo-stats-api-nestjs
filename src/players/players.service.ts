@@ -14,10 +14,9 @@ export class PlayersService {
     });
   }
 
-  findAll() {
-    return `This action returns all players`;
+  findAll(userId: number) {
+    return this.playersRepository.findAllByUser({ userId });
   }
-
   findOne(id: number) {
     return `This action returns a #${id} player`;
   }

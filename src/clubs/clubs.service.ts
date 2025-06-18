@@ -3,6 +3,7 @@ import { ClubsRepository } from './../shared/infrastructure/repositories/clubs.r
 import { CreateClubDto } from './dto/create-club.dto';
 import { UpdateClubDto } from './dto/update-club.dto';
 import { SearchFilterDto } from './dto/search-filter.dto';
+import { Club } from 'src/shared/infrastructure/database/models/club.model';
 
 @Injectable()
 export class ClubsService {
@@ -65,5 +66,12 @@ export class ClubsService {
     }
 
     return club;
+  }
+
+  async listWithSearchFilter(searchFilterDto: SearchFilterDto, userId: number) {
+    return await this.clubsRepository.findAllBySearch({
+      ...searchFilterDto,
+      userId,
+    });
   }
 }

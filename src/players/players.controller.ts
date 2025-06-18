@@ -30,9 +30,9 @@ export class PlayersController {
     );
   }
 
-  @Get()
+  @Get('list')
   findAll() {
-    return this.playersService.findAll();
+    return this.playersService.findAll(this.request.user.userId);
   }
 
   @Get(':id')
