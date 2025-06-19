@@ -4,9 +4,10 @@ import { PlayersController } from './players.controller';
 import { PlayersRepository } from 'src/shared/infrastructure/repositories/players.repository';
 import { DatabaseModule } from 'src/shared/infrastructure/database/database.module';
 import { Player } from 'src/shared/infrastructure/database/models/player.model';
+import { Club } from 'src/shared/infrastructure/database/models/club.model';
 
 @Module({
-  imports: [DatabaseModule.forFeature([Player])],
+  imports: [DatabaseModule.forFeature([Player, Club])],
   controllers: [PlayersController],
   providers: [PlayersService, PlayersRepository],
 })

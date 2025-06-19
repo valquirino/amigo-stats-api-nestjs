@@ -3,18 +3,23 @@ import { Injectable } from '@nestjs/common';
 import { Player } from '../database/models/player.model';
 import {
   ICreatePlayerData,
+  IPlayerId,
   IPlayerSearchFilter,
   IPlayerUserId,
   IPlayersRepository,
 } from '../../interfaces/players.repository.interface';
 import { IPlayerAttributes } from '../database/models/player.model';
 import { WhereOptions, Op } from 'sequelize';
+import { Club } from '../database/models/club.model';
 
 @Injectable()
 export class PlayersRepository implements IPlayersRepository {
   constructor(
     @InjectModel(Player)
     private readonly playerModel: typeof Player,
+
+    @InjectModel(Club)
+    private readonly clubModel: typeof Club,
   ) {}
 
   async create(data: ICreatePlayerData): Promise<IPlayerAttributes> {
@@ -23,7 +28,7 @@ export class PlayersRepository implements IPlayersRepository {
 
   async update(
     data: Partial<ICreatePlayerData>,
-    filter: IPlayerUserId,
+    filter: IPlayerId,
   ): Promise<void> {
     const parsedData: Partial<IPlayerAttributes> = {
       ...data,
@@ -35,10 +40,10 @@ export class PlayersRepository implements IPlayersRepository {
     });
   }
 
-  async delete(filter: IPlayerUserId): Promise<any> {
+  async delete(filter: IPlayerId): Promise<any> {
     return await this.playerModel.destroy({
       where: {
-        userId: filter.userId,
+        userId: filter.id,
       },
     });
   }
@@ -48,26 +53,41 @@ export class PlayersRepository implements IPlayersRepository {
   ): Promise<IPlayerAttributes[] | null> {
     return await this.playerModel.findAll({
       where: filter as WhereOptions<IPlayerAttributes>,
+      include: [
+        {
+          model: Club,
+          as: 'club',
+        },
+      ],
     });
   }
 
-  async findAllBySearch(
-    filter: IPlayerSearchFilter,
-  ): Promise<IPlayerAttributes[] | null> {
-    const where: WhereOptions<IPlayerAttributes> = {};
+  async findAllBySearch(filter: IPlayerSearchFilter): Promise<Player[]> {
+    const { search, position, clubId, userId } = filter;
 
-    if (filter.position) {
-      where.position = { [Op.iLike]: `%${filter.position}%` };
-    }
-    if (filter.clubId) {
-      where.$clubId$ = filter.clubId;
-    }
-    if (filter.search) {
-      where.name = filter.search;
+    const where: WhereOptions<IPlayerAttributes> = { userId };
+
+    if (position) {
+      where.position = { [Op.iLike]: `%${position}%` };
     }
 
-    return this.playerModel.findOne({ where }) as Promise<
-      IPlayerAttributes[] | null
-    >;
+    if (search) {
+      where.name = { [Op.iLike]: `%${search}%` };
+    }
+
+    if (clubId) {
+      where.clubId = clubId;
+    }
+
+    return await this.playerModel.findAll({
+      where,
+      include: [{ model: Club, as: 'club' }],
+    });
+  }
+
+  async findOne(id: number): Promise<Player | null> {
+    return this.playerModel.findOne({
+      where: { id } as WhereOptions<IPlayerAttributes>,
+    });
   }
 }

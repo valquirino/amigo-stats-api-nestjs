@@ -9,6 +9,7 @@ import { PlayersModule } from './players/players.module';
 import { ClubsModule } from './clubs/clubs.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AuthGuard } from './auth/auth.guard';
     AuthModule,
     PlayersModule,
     ClubsModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [

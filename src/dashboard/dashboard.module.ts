@@ -1,15 +1,13 @@
 import { Module } from '@nestjs/common';
-import { ClubsService } from './clubs.service';
-import { ClubsController } from './clubs.controller';
+import { DashboardService } from './dashboard.service';
+import { DashboardController } from './dashboard.controller';
 import { DatabaseModule } from 'src/shared/infrastructure/database/database.module';
 import { Club } from 'src/shared/infrastructure/database/models/club.model';
-import { ClubsRepository } from 'src/shared/infrastructure/repositories/clubs.repository';
 import { Player } from 'src/shared/infrastructure/database/models/player.model';
 
 @Module({
   imports: [DatabaseModule.forFeature([Club, Player])],
-  controllers: [ClubsController],
-  providers: [ClubsService, ClubsRepository],
-  exports: [ClubsRepository],
+  controllers: [DashboardController],
+  providers: [DashboardService],
 })
-export class ClubsModule {}
+export class DashboardModule {}

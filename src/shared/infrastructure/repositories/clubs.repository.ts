@@ -1,4 +1,4 @@
-import { Injectable, UploadedFile } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Club } from '../database/models/club.model';
 import {
@@ -14,12 +14,15 @@ import {
 import { WhereOptions, Op } from 'sequelize';
 import { IClubAttributes } from '../database/models/club.model';
 import { CreationAttributes } from 'sequelize';
+import { Player } from '../database/models/player.model';
 
 @Injectable()
 export class ClubsRepository implements IClubsRepository {
   constructor(
     @InjectModel(Club)
     private readonly clubModel: typeof Club,
+    @InjectModel(Player)
+    private readonly playerModel: typeof Player,
   ) {}
 
   async create(data: ICreateClubData): Promise<IClubAttributes> {
@@ -30,25 +33,8 @@ export class ClubsRepository implements IClubsRepository {
   async findAll(filter: IClubFilterFindAll): Promise<IClubAttributes[]> {
     return this.clubModel.findAll({
       where: filter as WhereOptions<IClubAttributes>,
+      include: [{ model: Player, as: 'players' }],
     });
-  }
-
-  findWithSearchFilter(
-    filter: IClubSearchFilter,
-  ): Promise<IClubAttributes | null> {
-    const where: WhereOptions<IClubAttributes> = {};
-
-    if (filter.search) {
-      where.name = { [Op.iLike]: `%${filter.search}%` };
-    }
-    if (filter.country) {
-      where.country = filter.country;
-    }
-    if (filter.league) {
-      where.league = filter.league;
-    }
-
-    return this.clubModel.findOne({ where });
   }
 
   async update(
@@ -66,7 +52,7 @@ export class ClubsRepository implements IClubsRepository {
   }
 
   async delete(filter: IClubFilter): Promise<void> {
-    console.log(filter.id)
+    console.log(filter.id);
     await this.clubModel.destroy({
       where: { id: filter.id },
     });
@@ -100,6 +86,9 @@ export class ClubsRepository implements IClubsRepository {
       where.name = { [Op.iLike]: `%${search}%` };
     }
 
-    return this.clubModel.findAll({ where });
+    return this.clubModel.findAll({
+      where,
+      include: [{ model: Player, as: 'players' }],
+    });
   }
 }

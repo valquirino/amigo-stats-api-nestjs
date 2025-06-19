@@ -3,7 +3,6 @@ import { ClubsRepository } from './../shared/infrastructure/repositories/clubs.r
 import { CreateClubDto } from './dto/create-club.dto';
 import { UpdateClubDto } from './dto/update-club.dto';
 import { SearchFilterDto } from './dto/search-filter.dto';
-import { Club } from 'src/shared/infrastructure/database/models/club.model';
 
 @Injectable()
 export class ClubsService {
@@ -24,16 +23,6 @@ export class ClubsService {
 
   async findAll(userId: number) {
     return this.clubsRepository.findAll({ userId });
-  }
-
-  async findWithSeaarchFilter(filter: SearchFilterDto) {
-    const club = await this.clubsRepository.findWithSearchFilter(filter);
-
-    if (!club) {
-      throw new NotFoundException(`Clube nao encontrado.`);
-    }
-
-    return club;
   }
 
   async update(id: number, updateClubDto: UpdateClubDto) {

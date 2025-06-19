@@ -40,9 +40,6 @@ export interface IClubsRepository {
   findAll(filter: IClubFilterFindAll): Promise<IClubAttributes[]>;
   delete(filter: IClubFilter): Promise<any>;
   update(data: IClubAttributes, filter: IClubFilter): Promise<any>;
-  findWithSearchFilter(
-    filter: IClubSearchFilter,
-  ): Promise<IClubAttributes | null>;
   findById(id: number): Promise<IClubAttributes | null>;
   findByName(filter: IClubSearchByName): Promise<IClubAttributes | null>;
   findAllBySearch(
