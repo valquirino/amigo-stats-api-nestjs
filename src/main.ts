@@ -10,7 +10,6 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // 🔧 Pipes globais para validação
   app.useGlobalPipes(
     new ValidationPipe({
       forbidNonWhitelisted: true,

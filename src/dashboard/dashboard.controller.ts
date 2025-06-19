@@ -1,34 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Inject } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { DashboardService } from './dashboard.service';
-import { CreateDashboardDto } from './dto/create-dashboard.dto';
-import { UpdateDashboardDto } from './dto/update-dashboard.dto';
+import { RequestWithUser } from 'src/shared/interfaces/request-with-user.interface';
 
 @Controller('dashboard')
 export class DashboardController {
-  constructor(private readonly dashboardService: DashboardService) {}
-
-  @Post()
-  create(@Body() createDashboardDto: CreateDashboardDto) {
-    return this.dashboardService.create(createDashboardDto);
+  constructor(
+    private readonly dashboardService: DashboardService,
+    @Inject(REQUEST)
+    private readonly request: RequestWithUser,
+  ) {}
+  @Get('latest')
+  async getLatest() {
+    return await this.dashboardService.getLatest(this.request.user.userId);
   }
 
-  @Get()
-  findAll() {
-    return this.dashboardService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.dashboardService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDashboardDto: UpdateDashboardDto) {
-    return this.dashboardService.update(+id, updateDashboardDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.dashboardService.remove(+id);
+  @Get('counts')
+  async getCounts() {
+    return await this.dashboardService.getCounts(this.request.user.userId);
   }
 }
