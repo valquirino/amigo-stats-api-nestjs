@@ -1,3 +1,4 @@
+import { ActivityRepository } from 'src/shared/infrastructure/repositories/activities.repository';
 import {
   Injectable,
   NotFoundException,
@@ -12,7 +13,10 @@ import { UpdatePasswordrDto } from './dto/update-password.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly activityRepository: ActivityRepository,
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     const userExists = await this.usersRepository.findOne({
@@ -43,17 +47,25 @@ export class UsersService {
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto, userName: string) {
     const user = await this.usersRepository.findOne({ id });
     if (!user) {
       throw new NotFoundException(`Usuário com id ${id} não encontrado.`);
     }
 
     await this.usersRepository.update(updateUserDto, { id });
+
+    await this.activityRepository.create({
+      user: userName,
+      actionType: 'edit',
+      entity: 'user',
+      description: `${userName} updated his profile.`,
+    });
+
     return this.usersRepository.findOne({ id });
   }
 
-  async remove(id: number) {
+  async remove(id: number, userName: string) {
     const user = await this.usersRepository.findOne({ id });
     if (!user) {
       throw new NotFoundException(`Usuário com id ${id} não encontrado.`);

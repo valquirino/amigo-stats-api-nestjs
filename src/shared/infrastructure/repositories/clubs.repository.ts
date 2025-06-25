@@ -52,7 +52,6 @@ export class ClubsRepository implements IClubsRepository {
   }
 
   async delete(filter: IClubFilter): Promise<void> {
-    console.log(filter.id);
     await this.clubModel.destroy({
       where: { id: filter.id },
     });

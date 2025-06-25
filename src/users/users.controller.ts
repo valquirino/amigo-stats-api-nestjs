@@ -4,7 +4,6 @@ import {
   Get,
   Post,
   Body,
-  Param,
   Delete,
   Inject,
   Put,
@@ -12,7 +11,6 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FindUserDto } from './dto/find-user.dto';
 import { Public } from 'src/shared/infrastructure/decorators/public.decorator';
 import { REQUEST } from '@nestjs/core';
 import { RequestWithUser } from 'src/shared/interfaces/request-with-user.interface';
@@ -39,12 +37,19 @@ export class UsersController {
 
   @Put('update-profile')
   update(@Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(this.request.user.userId, updateUserDto);
+    return this.usersService.update(
+      this.request.user.userId,
+      updateUserDto,
+      this.request.user.name,
+    );
   }
 
   @Delete(':id')
-  remove(@Param() { id }: FindUserDto) {
-    return this.usersService.remove(id);
+  remove() {
+    return this.usersService.remove(
+      this.request.user.userId,
+      this.request.user.name,
+    );
   }
 
   @Get('profile')

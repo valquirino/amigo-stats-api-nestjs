@@ -21,7 +21,6 @@ export interface ICreateClubData {
 export interface IClubFilterFindAll {
   userId: number;
 }
-
 export interface IClubFilter {
   id: number;
 }
@@ -30,7 +29,6 @@ export interface IClubSearchFilter {
   country?: string;
   league?: string;
 }
-
 export interface IClubSearchByName {
   name?: string;
 }

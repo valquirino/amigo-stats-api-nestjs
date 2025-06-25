@@ -30,6 +30,7 @@ export interface IClubAttributes {
   userId: number;
   createdAt?: Date;
   updatedAt?: Date;
+  players?: Player[];
 }
 
 @Table({

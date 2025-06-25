@@ -46,7 +46,11 @@ export class AuthGuard implements CanActivate {
         throw new UnauthorizedException('Token is expired');
       }
 
-      request.user = { userId: payload.userId, email: payload.email };
+      request.user = {
+        userId: payload.userId,
+        email: payload.email,
+        name: payload.name,
+      };
     } catch {
       throw new UnauthorizedException();
     }

@@ -29,10 +29,6 @@ export class DashboardRepository implements IDashboardRepository {
       order: [['createdAt', 'DESC']],
       limit: 5,
     });
-    console.log({
-      clubs,
-      players,
-    });
 
     return { clubs, players };
   }
@@ -47,11 +43,6 @@ export class DashboardRepository implements IDashboardRepository {
       },
     });
 
-    console.log({
-      clubs: clubsCount,
-      players: playersCount,
-      activePlayers: playerActiveCount,
-    });
     return {
       clubs: clubsCount,
       players: playersCount,
