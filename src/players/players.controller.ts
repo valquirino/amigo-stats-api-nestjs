@@ -28,6 +28,7 @@ export class PlayersController {
     return this.playersService.create(
       createPlayerDto,
       this.request.user.userId,
+      this.request.user.name,
     );
   }
 
@@ -51,11 +52,15 @@ export class PlayersController {
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
-    return this.playersService.update(+id, updatePlayerDto);
+    return this.playersService.update(
+      +id,
+      updatePlayerDto,
+      this.request.user.name,
+    );
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.playersService.remove(+id);
+    return this.playersService.remove(+id, this.request.user.name);
   }
 }

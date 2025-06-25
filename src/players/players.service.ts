@@ -3,16 +3,33 @@ import { Injectable } from '@nestjs/common';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { SearchPlayerFilterDto } from './dto/searchPlayerFilterDto.dto';
+import { ActivityRepository } from 'src/shared/infrastructure/repositories/activities.repository';
 
 @Injectable()
 export class PlayersService {
-  constructor(private readonly playersRepository: PlayersRepository) {}
+  constructor(
+    private readonly playersRepository: PlayersRepository,
+    private readonly activityRepository: ActivityRepository,
+  ) {}
 
-  create(createPlayerDto: CreatePlayerDto, userId: number) {
-    return this.playersRepository.create({
+  async create(
+    createPlayerDto: CreatePlayerDto,
+    userId: number,
+    userName: string,
+  ) {
+    const player = await this.playersRepository.create({
       ...createPlayerDto,
       userId,
     });
+
+    await this.activityRepository.create({
+      user: userName,
+      actionType: 'create',
+      entity: 'player',
+      description: `${userName} created a new player.`,
+    });
+
+    return player;
   }
 
   findAll(userId: number) {
@@ -22,12 +39,32 @@ export class PlayersService {
     return this.playersRepository.findOne(id);
   }
 
-  update(id: number, updatePlayerDto: UpdatePlayerDto) {
-    return this.playersRepository.update(updatePlayerDto, { id });
+  async update(id: number, updatePlayerDto: UpdatePlayerDto, userName: string) {
+    const updated = await this.playersRepository.update(updatePlayerDto, {
+      id,
+    });
+
+    await this.activityRepository.create({
+      user: userName,
+      actionType: 'edit',
+      entity: 'player',
+      description: `${userName} edited player #${id}.`,
+    });
+
+    return updated;
   }
 
-  remove(id: number) {
-    return this.playersRepository.delete({ id });
+  async remove(id: number, userName: string) {
+    const deleted = await this.playersRepository.delete({ id });
+
+    await this.activityRepository.create({
+      user: userName,
+      actionType: 'delete',
+      entity: 'player',
+      description: `${userName} removed player #${id}.`,
+    });
+
+    return deleted;
   }
 
   findWithSearchFilter(
