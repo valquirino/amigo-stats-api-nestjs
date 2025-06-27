@@ -25,7 +25,11 @@ export class ClubsController {
 
   @Post()
   create(@Body() createClubDto: CreateClubDto) {
-    return this.clubsService.create(createClubDto, this.request.user.userId);
+    return this.clubsService.create(
+      createClubDto,
+      this.request.user.userId,
+      this.request.user.name,
+    );
   }
 
   @Get('list')
@@ -39,12 +43,12 @@ export class ClubsController {
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateClubDto: UpdateClubDto) {
-    return this.clubsService.update(+id, updateClubDto);
+    return this.clubsService.update(+id, updateClubDto, this.request.user.name);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.clubsService.remove(+id);
+    return this.clubsService.remove(+id, this.request.user.name);
   }
 
   @Post('filter')

@@ -64,6 +64,8 @@ export class PlayersService {
       description: `${userName} removed player #${id}.`,
     });
 
+    console.log(deleted)
+
     return deleted;
   }
 

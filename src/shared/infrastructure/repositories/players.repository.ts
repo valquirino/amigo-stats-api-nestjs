@@ -43,7 +43,7 @@ export class PlayersRepository implements IPlayersRepository {
   async delete(filter: IPlayerId): Promise<any> {
     return await this.playerModel.destroy({
       where: {
-        userId: filter.id,
+        id: filter.id,
       },
     });
   }
