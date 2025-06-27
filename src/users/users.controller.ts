@@ -59,7 +59,6 @@ export class UsersController {
 
   @Put('update-password')
   updatePassword(@Body() updateUserPassword: UpdatePasswordrDto) {
-    console.log('cheguri aqui');
     return this.usersService.updatePassword(
       this.request.user.userId,
       updateUserPassword,
