@@ -7,6 +7,8 @@ export class ActivitiesService {
   constructor(private readonly activityRepository: ActivityRepository) {}
 
   async getActivities(): Promise<IActivityAttributes[]> {
+    console.log(3242144131);
+    
     return this.activityRepository.list();
   }
 }

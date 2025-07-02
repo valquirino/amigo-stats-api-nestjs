@@ -55,7 +55,9 @@ export class PlayersService {
   }
 
   async remove(id: number, userName: string) {
-    const deleted = await this.playersRepository.delete({ id });
+    const player = await this.playersRepository.findOne(id);
+
+    await this.playersRepository.delete({ id });
 
     await this.activityRepository.create({
       user: userName,
@@ -64,8 +66,7 @@ export class PlayersService {
       description: `${userName} removed player #${id}.`,
     });
 
-
-    return deleted;
+    return player;
   }
 
   findWithSearchFilter(

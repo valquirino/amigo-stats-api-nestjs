@@ -1,4 +1,3 @@
-import { Request } from 'express';
 import {
   Controller,
   Get,
@@ -46,10 +45,7 @@ export class UsersController {
 
   @Delete(':id')
   remove() {
-    return this.usersService.remove(
-      this.request.user.userId,
-      this.request.user.name,
-    );
+    return this.usersService.remove(this.request.user.userId);
   }
 
   @Get('profile')

@@ -27,6 +27,7 @@ export class ClubsRepository implements IClubsRepository {
 
   async create(data: ICreateClubData): Promise<IClubAttributes> {
     const club = await this.clubModel.create(data as CreationAttributes<Club>);
+
     return club.toJSON();
   }
 
@@ -44,6 +45,7 @@ export class ClubsRepository implements IClubsRepository {
     await this.clubModel.update(data, {
       where: filter as WhereOptions<IClubAttributes>,
     });
+
     const updated = await this.clubModel.findOne({
       where: filter as WhereOptions<IClubAttributes>,
     });
@@ -60,6 +62,7 @@ export class ClubsRepository implements IClubsRepository {
   async findById(id: number): Promise<IClubAttributes | null> {
     return this.clubModel.findOne({ where: { id: id } });
   }
+
   async findByName(filter: IClubSearchByName): Promise<IClubAttributes | null> {
     return this.clubModel.findOne({
       where: filter as WhereOptions<IClubAttributes>,

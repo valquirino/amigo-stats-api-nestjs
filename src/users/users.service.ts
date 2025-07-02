@@ -41,14 +41,17 @@ export class UsersService {
 
   async getCurrentUser(id: number) {
     const user = await this.usersRepository.findOne({ id });
+
     if (!user) {
       throw new NotFoundException(`Usuário com id ${id} não encontrado.`);
     }
+
     return user;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto, userName: string) {
     const user = await this.usersRepository.findOne({ id });
+
     if (!user) {
       throw new NotFoundException(`Usuário com id ${id} não encontrado.`);
     }
@@ -65,22 +68,28 @@ export class UsersService {
     return this.usersRepository.findOne({ id });
   }
 
-  async remove(id: number, userName: string) {
+  async remove(id: number) {
     const user = await this.usersRepository.findOne({ id });
+
     if (!user) {
       throw new NotFoundException(`Usuário com id ${id} não encontrado.`);
     }
 
     await this.usersRepository.delete({ id });
+
     return { message: `Usuário com id ${id} removido com sucesso.` };
   }
+
   async findByEmail(email: string) {
     const user = await this.usersRepository.findByEmail(email);
+
     if (!user) {
       throw new NotFoundException(`Usuário com email ${email} não encontrado.`);
     }
+
     return user;
   }
+
   async renderProfile(id: number) {
     const user = await this.usersRepository.findOne({ id });
 

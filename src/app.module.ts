@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { DatabaseModule } from './shared/infrastructure/database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
@@ -10,6 +8,7 @@ import { ClubsModule } from './clubs/clubs.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ActivityModule } from './activities/activities.module';
 
 @Module({
   imports: [
@@ -20,10 +19,9 @@ import { DashboardModule } from './dashboard/dashboard.module';
     PlayersModule,
     ClubsModule,
     DashboardModule,
+    ActivityModule,
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
