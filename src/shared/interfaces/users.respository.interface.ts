@@ -4,6 +4,8 @@ export interface ICreateUserData {
   name: string;
   email: string;
   password: string;
+  role:string;
+  permission : 'pending' | 'approved' | 'rejected';
 }
 
 export interface IUserFilter {

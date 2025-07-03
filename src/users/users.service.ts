@@ -32,6 +32,7 @@ export class UsersService {
     return this.usersRepository.create({
       ...createUserDto,
       password: hashedPassword,
+      permission: 'pending',
     });
   }
 
