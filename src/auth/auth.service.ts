@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
@@ -23,6 +23,10 @@ export class AuthService {
 
     if (!passwordMatches) {
       throw new UnauthorizedException('Email ou senha inválidos');
+    }
+
+    if(user.permission!== 'approved') {
+      throw new ForbiddenException('Sua conta ainda não foi aprovada,para isso solicite acesso no botao abaixo ');
     }
 
     const payload: ITokenPayload = {

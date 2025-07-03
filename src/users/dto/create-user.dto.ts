@@ -1,4 +1,4 @@
-import { IsString, IsEmail, MinLength, IsNotEmpty } from 'class-validator';
+import { IsString, IsEmail, MinLength, IsNotEmpty, IsIn } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -21,5 +21,8 @@ export class CreateUserDto {
   @ApiProperty({ example: 'admin', description: 'Papel ou função do usuário no sistema' })
   @IsString()
   @IsNotEmpty({ message: 'O papel é obrigatório.' })
-  role: string;
+  role:string;
+
+    @IsIn(['pending', 'approved','rejected'])
+    permission:'pending' | 'approved'| 'rejected';
 }

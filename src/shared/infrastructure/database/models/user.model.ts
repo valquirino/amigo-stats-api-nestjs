@@ -16,7 +16,8 @@ export interface IUserAttributes {
   email: string;
   createdAt?: Date;
   deletedAt?: Date | null;
-  role: 'user' | 'admin';
+  role: string;
+  permission : 'pending' | 'approved' | 'rejected'
 }
 
 @Table({
@@ -69,7 +70,14 @@ export class User extends Model<IUserAttributes> {
 
   @Column({
     allowNull: false,
-    type: DataType.ENUM('user', 'admin'),
+    type: DataType.STRING,
   })
-  declare role: 'user' | 'admin';
+  declare role: string
+
+  @Column({
+    allowNull: false,
+    type: DataType.ENUM('pending', 'approved','rejected'),
+  })
+  declare permission: 'pending' | 'approved' | 'rejected';
+
 }
