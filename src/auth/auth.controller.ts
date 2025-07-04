@@ -8,6 +8,7 @@ import {
   ApiResponse,
   ApiBody,
 } from '@nestjs/swagger';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -23,4 +24,10 @@ export class AuthController {
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
   }
+  @
+  Post('request-access')
+  requestAccess(@Body() dto:CreateUserDto){
+    return this.authService.registerUserWIthAcess(dto)
+  }
+
 }
