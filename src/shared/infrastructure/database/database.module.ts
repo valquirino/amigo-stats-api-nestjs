@@ -9,12 +9,18 @@ import { SequelizeModule } from '@nestjs/sequelize';
       useFactory: (configService: ConfigService) => ({
         // TODO: colocar todas as config no .env e validar as variaveis
         dialect: 'postgres',
-        host: 'localhost',
+        host: configService.getOrThrow('POSTGRES_HOST'),
         port: 5432,
         username: configService.getOrThrow('POSTGRES_USER'),
         password: configService.getOrThrow('POSTGRES_PASSWORD'),
         database: configService.getOrThrow('POSTGRES_DB'),
         autoLoadModels: true,
+        dialectOptions: {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false,
+          },
+        },
       }),
       inject: [ConfigService],
     }),
