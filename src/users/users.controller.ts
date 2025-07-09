@@ -6,6 +6,7 @@ import {
   Delete,
   Inject,
   Put,
+  Param,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -85,4 +86,20 @@ export class UsersController {
       updateUserPassword,
     );
   }
+  @Get('pending')
+  async getUsersWithPendingPermission() {
+    return this.usersService.findPending();
+  }
+
+  @Put('approve-requests/:id')
+async allowRequests(@Param('id') id: string) {
+return this.usersService.allowRequest(+id);
+}r
+
+@Put('forbid-request/:id')
+async forbidRequest(@Param('id') id: string) {
+return this.usersService.forbidRequest(+id)
+}
+
+
 }

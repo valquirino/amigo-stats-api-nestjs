@@ -47,13 +47,12 @@ export class AuthService {
   }
 
   async registerUserWIthAcess(dto: CreateUserDto) {
-    const user = await this.usersService.findByEmail(dto.email);
+    // const user = await this.usersService.findByEmail(dto.email);
 
-    if (user) {
-      throw new UnauthorizedException('Usuário já existe e esta a esperando pela permissao dos admins');
-    }
-
+    // if (user) {
+    //   throw new UnauthorizedException('Usuário já existe e esta a esperando pela permissao dos admins');
+    // }
+    
     this.usersService.create(dto)
-
   }
 }

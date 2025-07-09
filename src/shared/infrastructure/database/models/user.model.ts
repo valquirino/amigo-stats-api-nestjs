@@ -39,7 +39,7 @@ export class User extends Model<IUserAttributes> {
   declare id: number;
 
   @Column({
-    allowNull: false,
+    allowNull: true,
     type: DataType.STRING,
   })
   declare name: string;
@@ -69,7 +69,7 @@ export class User extends Model<IUserAttributes> {
   declare deletedAt: Date | null;
 
   @Column({
-    allowNull: false,
+    allowNull: true,
     type: DataType.STRING,
   })
   declare role: string

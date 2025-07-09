@@ -24,8 +24,8 @@ export class AuthController {
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
   }
-  @
-  Post('request-access')
+  @Public()
+  @Post('request-access')
   requestAccess(@Body() dto:CreateUserDto){
     return this.authService.registerUserWIthAcess(dto)
   }
