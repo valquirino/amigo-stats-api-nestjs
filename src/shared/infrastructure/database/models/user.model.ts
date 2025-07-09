@@ -17,6 +17,7 @@ export interface IUserAttributes {
   createdAt?: Date;
   deletedAt?: Date | null;
   role: 'user' | 'admin';
+  isChecked: boolean;
 }
 
 @Table({
@@ -72,4 +73,12 @@ export class User extends Model<IUserAttributes> {
     type: DataType.ENUM('user', 'admin'),
   })
   declare role: 'user' | 'admin';
+
+  @Column({
+    allowNull: false,
+    type: DataType.BOOLEAN,
+    field: 'is_checked',
+    defaultValue: true,
+  })
+  declare isChecked: boolean;
 }

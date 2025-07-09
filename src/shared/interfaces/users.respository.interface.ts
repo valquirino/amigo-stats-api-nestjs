@@ -4,6 +4,7 @@ export interface ICreateUserData {
   name: string;
   email: string;
   password: string;
+  isChecked?: boolean;
 }
 
 export interface IUserFilter {

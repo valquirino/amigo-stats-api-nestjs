@@ -1,4 +1,4 @@
-import { IsString, IsEmail, MinLength, IsNotEmpty } from 'class-validator';
+import { IsString, IsEmail, MinLength, IsNotEmpty, IsOptional, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -22,4 +22,9 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty({ message: 'O papel é obrigatório.' })
   role: string;
+
+  @ApiProperty({ example: true, description: 'Status de verificação do usuário', required: false })
+  @IsOptional()
+  @IsBoolean({ message: 'O status de verificação deve ser um valor booleano.' })
+  isChecked?: boolean;
 }
