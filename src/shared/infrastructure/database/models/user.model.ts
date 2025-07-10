@@ -17,6 +17,7 @@ export interface IUserAttributes {
   createdAt?: Date;
   deletedAt?: Date | null;
   role: string;
+  isChecked: boolean;
   permission : 'pending' | 'approved' | 'rejected'
 }
 
@@ -80,4 +81,11 @@ export class User extends Model<IUserAttributes> {
   })
   declare permission: 'pending' | 'approved' | 'rejected';
 
+  @Column({
+    allowNull: false,
+    type: DataType.BOOLEAN,
+    field: 'is_checked',
+    defaultValue: true,
+  })
+  declare isChecked: boolean;
 }
