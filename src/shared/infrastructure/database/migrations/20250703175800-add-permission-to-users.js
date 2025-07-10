@@ -5,7 +5,6 @@ module.exports = {
     await queryInterface.addColumn('users', 'permission', {
       type: Sequelize.STRING,
       allowNull: false,
-      defaultValue: 'approved',
     });
   },
 
