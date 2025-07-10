@@ -16,8 +16,8 @@ export interface IUserAttributes {
   email: string;
   createdAt?: Date;
   deletedAt?: Date | null;
-  role: 'user' | 'admin';
-  isChecked: boolean;
+  role: string;
+  permission : 'pending' | 'approved' | 'rejected'
 }
 
 @Table({
@@ -39,7 +39,7 @@ export class User extends Model<IUserAttributes> {
   declare id: number;
 
   @Column({
-    allowNull: false,
+    allowNull: true,
     type: DataType.STRING,
   })
   declare name: string;
@@ -69,16 +69,15 @@ export class User extends Model<IUserAttributes> {
   declare deletedAt: Date | null;
 
   @Column({
-    allowNull: false,
-    type: DataType.ENUM('user', 'admin'),
+    allowNull: true,
+    type: DataType.STRING,
   })
-  declare role: 'user' | 'admin';
+  declare role: string
 
   @Column({
     allowNull: false,
-    type: DataType.BOOLEAN,
-    field: 'is_checked',
-    defaultValue: true,
+    type: DataType.ENUM('pending', 'approved','rejected'),
   })
-  declare isChecked: boolean;
+  declare permission: 'pending' | 'approved' | 'rejected';
+
 }

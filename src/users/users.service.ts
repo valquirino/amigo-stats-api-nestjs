@@ -32,6 +32,7 @@ export class UsersService {
     return this.usersRepository.create({
       ...createUserDto,
       password: hashedPassword,
+      permission: 'pending',
     });
   }
 
@@ -123,4 +124,23 @@ export class UsersService {
     await this.usersRepository.update({ password: newPassword }, { id });
     return this.usersRepository.findOne({ id });
   }
+  async findPending() {
+    const allUsers = await this.findAll();
+    return allUsers?.filter(user => user.permission === 'pending') || [];
+  }
+
+  async allowRequest(id: number) {
+    const user = await this.usersRepository.findOne({ id })
+    if (!user) throw new NotFoundException('Usuário não encontrado');
+    return this.usersRepository.update({ permission: 'approved' },{id})
+    }
+
+    async forbidRequest(id: number) {
+      const user = await this.usersRepository.findOne({ id })
+      if (!user) throw new NotFoundException('Usuário não encontrado');
+      return this.usersRepository.update( { permission: 'rejected' }, { id });
+      }
+
+
+  
 }
