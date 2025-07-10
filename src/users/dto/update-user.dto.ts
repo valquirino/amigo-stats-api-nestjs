@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, IsOptional, IsBoolean } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsOptional, IsBoolean, IsIn } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateUserDto {
@@ -16,4 +16,7 @@ export class UpdateUserDto {
   @IsOptional()
   @IsBoolean({ message: 'O status de verificação deve ser um valor booleano.' })
   isChecked?: boolean;
+
+  @IsIn(['admin','user',])
+  role: string
 }
