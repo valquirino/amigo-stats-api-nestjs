@@ -3,5 +3,5 @@ export interface ITokenPayload {
   email: string;
   name: string;
   role: string;
-  isChecked: boolean;
+  isChanged: boolean;
 }

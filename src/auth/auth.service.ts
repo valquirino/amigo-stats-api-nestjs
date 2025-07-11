@@ -35,7 +35,7 @@ export class AuthService {
       email: user.email,
       name: user.name,
       role: user.role,
-      isChecked: user.isChecked,
+      isChanged: user.isChanged,
     };
 
     const token = this.jwtService.sign(payload);

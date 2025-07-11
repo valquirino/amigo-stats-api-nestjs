@@ -6,7 +6,7 @@ export interface ICreateUserData {
   password: string;
   role:string;
   permission : 'pending' | 'approved' | 'rejected';
-  isChecked?: boolean;
+  isChanged?: boolean;
 }
 
 export interface IUserFilter {

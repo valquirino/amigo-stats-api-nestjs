@@ -30,5 +30,5 @@ export class CreateUserDto {
   @ApiProperty({ example: true, description: 'Status de verificação do usuário', required: false })
   @IsOptional()
   @IsBoolean({ message: 'O status de verificação deve ser um valor booleano.' })
-  isChecked?: boolean;
+  isChanged?: boolean;
 }
