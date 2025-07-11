@@ -6,9 +6,7 @@ import { IActivityAttributes } from 'src/shared/infrastructure/database/models/a
 export class ActivitiesService {
   constructor(private readonly activityRepository: ActivityRepository) {}
 
-  async getActivities(): Promise<IActivityAttributes[]> {
-    console.log(3242144131);
-    
+  async getActivities(): Promise<IActivityAttributes[]> {    
     return this.activityRepository.list();
   }
 }
