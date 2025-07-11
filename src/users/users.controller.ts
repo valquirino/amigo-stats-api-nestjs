@@ -15,12 +15,8 @@ import { Public } from 'src/shared/infrastructure/decorators/public.decorator';
 import { REQUEST } from '@nestjs/core';
 import { RequestWithUser } from 'src/shared/interfaces/request-with-user.interface';
 import { UpdatePasswordrDto } from './dto/update-password.dto';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBody,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { SearchUserFilterDTO } from './dto/searchUserFilter.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -49,7 +45,9 @@ export class UsersController {
   }
 
   @Put('update-profile')
-  @ApiOperation({ summary: 'Atualiza os dados do perfil do usuário autenticado' })
+  @ApiOperation({
+    summary: 'Atualiza os dados do perfil do usuário autenticado',
+  })
   @ApiResponse({ status: 200, description: 'Perfil atualizado com sucesso' })
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
   @ApiBody({ type: UpdateUserDto })
@@ -70,7 +68,10 @@ export class UsersController {
 
   @Get('profile')
   @ApiOperation({ summary: 'Retorna o perfil do usuário autenticado' })
-  @ApiResponse({ status: 200, description: 'Perfil do usuário retornado com sucesso' })
+  @ApiResponse({
+    status: 200,
+    description: 'Perfil do usuário retornado com sucesso',
+  })
   getProfile() {
     return this.usersService.renderProfile(this.request.user.userId);
   }
@@ -92,14 +93,19 @@ export class UsersController {
   }
 
   @Put('approve-requests/:id')
-async allowRequests(@Param('id') id: string) {
-return this.usersService.allowRequest(+id);
-}r
+  async allowRequests(@Param('id') id: string) {
+    return this.usersService.allowRequest(+id);
+  }
+  r;
 
-@Put('forbid-request/:id')
-async forbidRequest(@Param('id') id: string) {
-return this.usersService.forbidRequest(+id)
-}
+  @Put('forbid-request/:id')
+  async forbidRequest(@Param('id') id: string) {
+    return this.usersService.forbidRequest(+id);
+  }
 
+  @Post('filter-request')
+  async (@Body() searchUserFilterDTO:SearchUserFilterDTO ){
+    return this.usersService.getUsersWithFilter(searchUserFilterDTO)
+  }
 
 }

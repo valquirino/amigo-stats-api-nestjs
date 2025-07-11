@@ -15,12 +15,6 @@ import { SequelizeModule } from '@nestjs/sequelize';
         password: configService.getOrThrow('POSTGRES_PASSWORD'),
         database: configService.getOrThrow('POSTGRES_DB'),
         autoLoadModels: true,
-        dialectOptions: {
-          ssl: {
-            require: true,
-            rejectUnauthorized: false,
-          },
-        },
       }),
       inject: [ConfigService],
     }),
