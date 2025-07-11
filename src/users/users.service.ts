@@ -10,6 +10,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdatePasswordrDto } from './dto/update-password.dto';
+ import { ListUserFilterDTO } from 'dist/users/dto/listPendingFilter.dto';
 
 @Injectable()
 export class UsersService {
@@ -140,6 +141,10 @@ export class UsersService {
       if (!user) throw new NotFoundException('Usuário não encontrado');
       return this.usersRepository.update( { permission: 'rejected' }, { id });
       }
+
+   async getUsersWithFilter(filter:ListUserFilterDTO){
+    return this.usersRepository.getUsersWithFilter(filter)
+   }
 
 
   

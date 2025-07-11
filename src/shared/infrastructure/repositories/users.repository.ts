@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from '../database/models/user.model';
 import {
   IGetUserById,
+  IsearchUserFilter,
   IUsersRepository,
 } from 'src/shared/interfaces/users.respository.interface';
 import { IUserAttributes } from '../database/models/user.model';
@@ -10,7 +11,7 @@ import {
   ICreateUserData,
   IUserFilter,
 } from 'src/shared/interfaces/users.respository.interface';
-import { WhereOptions } from 'sequelize';
+import { Op, WhereOptions } from 'sequelize';
 import { CreationAttributes } from 'sequelize';
 
 @Injectable()
@@ -60,5 +61,29 @@ export class UsersRepository implements IUsersRepository {
     return this.userModel.findOne({
       where: { id: filter.id },
     });
+  }
+  
+   async getUsersWithFilter(filter: IsearchUserFilter): Promise<IUserAttributes[] | null> {
+    const { permission, date } = filter;
+
+    const where: WhereOptions<any> = {};
+  
+    if (permission) {
+      where.permission = { [Op.eq]: permission };
+    }
+  
+    if (date) {
+      const startDate = new Date(date);  
+      const endDate = new Date();   
+      where.createdAt = {
+        [Op.between]: [startDate, endDate],
+      };
+    }
+  
+    return await this.userModel.findAll({
+      where,
+      order: [['createdAt', 'DESC']],
+    });
+  
   }
 }
