@@ -54,6 +54,6 @@ export class AuthService {
     //   throw new UnauthorizedException('Usuário já existe e esta a esperando pela permissao dos admins');
     // }
     
-    this.usersService.create(dto)
+    return await this.usersService.create(dto)
   }
 }

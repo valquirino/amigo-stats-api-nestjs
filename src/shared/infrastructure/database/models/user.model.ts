@@ -84,7 +84,7 @@ export class User extends Model<IUserAttributes> {
   @Column({
     allowNull: false,
     type: DataType.BOOLEAN,
-    field: 'is_checked',
+    field: 'is_changed',
     defaultValue: true,
   })
   declare isChanged: boolean;
