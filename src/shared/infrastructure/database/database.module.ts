@@ -6,16 +6,26 @@ import { SequelizeModule } from '@nestjs/sequelize';
   imports: [
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        // TODO: colocar todas as config no .env e validar as variaveis
-        dialect: 'postgres',
-        host: configService.getOrThrow('POSTGRES_HOST'),
-        port: 5432,
-        username: configService.getOrThrow('POSTGRES_USER'),
-        password: configService.getOrThrow('POSTGRES_PASSWORD'),
-        database: configService.getOrThrow('POSTGRES_DB'),
-        autoLoadModels: true,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const isSSL = configService.get('DB_SSL') === 'true';
+        return {
+          dialect: 'postgres',
+          host: configService.getOrThrow('POSTGRES_HOST'),
+          port: 5432,
+          username: configService.getOrThrow('POSTGRES_USER'),
+          password: configService.getOrThrow('POSTGRES_PASSWORD'),
+          database: configService.getOrThrow('POSTGRES_DB'),
+          autoLoadModels: true,
+          dialectOptions: isSSL
+            ? {
+                ssl: {
+                  require: true,
+                  rejectUnauthorized: false,
+                },
+              }
+            : {},
+        };
+      },
       inject: [ConfigService],
     }),
   ],
