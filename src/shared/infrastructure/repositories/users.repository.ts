@@ -62,28 +62,35 @@ export class UsersRepository implements IUsersRepository {
       where: { id: filter.id },
     });
   }
-  
-   async getUsersWithFilter(filter: IsearchUserFilter): Promise<IUserAttributes[] | null> {
-    const { permission, date } = filter;
 
+  async getUsersWithFilter(filter: IsearchUserFilter): Promise<any> {
+    const { permission, startDate, endDate } = filter;
+  
     const where: WhereOptions<any> = {};
   
     if (permission) {
       where.permission = { [Op.eq]: permission };
     }
   
-    if (date) {
-      const startDate = new Date(date);  
-      const endDate = new Date();   
+    if (startDate && endDate) {
       where.createdAt = {
-        [Op.between]: [startDate, endDate],
+        [Op.between]: [new Date(startDate), new Date(endDate)],
       };
     }
+  
+    if (startDate && !endDate) {
+      return { success: false, message: 'A data final é necessária.' };
+    }
+    
+    if (!startDate && endDate) {
+      return { success: false, message: 'A data de início é necessária.' };
+    }
+    
   
     return await this.userModel.findAll({
       where,
       order: [['createdAt', 'DESC']],
     });
-  
   }
+  
 }

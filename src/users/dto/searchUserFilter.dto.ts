@@ -7,5 +7,10 @@ export class SearchUserFilterDTO {
 
   @IsOptional()
   @IsDateString()
-  date?: string; // formato ISO: '2025-07-01'
+  startDate?: string; // formato ISO: '2025-07-01'
+
+  @IsOptional()
+  @IsDateString()
+  endDate?: string; 
+
 }
