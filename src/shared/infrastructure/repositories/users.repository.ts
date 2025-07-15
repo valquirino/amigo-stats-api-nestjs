@@ -11,7 +11,7 @@ import {
   ICreateUserData,
   IUserFilter,
 } from 'src/shared/interfaces/users.respository.interface';
-import { Op, WhereOptions } from 'sequelize';
+import { Op, Sequelize, WhereOptions } from 'sequelize';
 import { CreationAttributes } from 'sequelize';
 
 @Injectable()
@@ -63,34 +63,44 @@ export class UsersRepository implements IUsersRepository {
     });
   }
 
-  async getUsersWithFilter(filter: IsearchUserFilter): Promise<any> {
-    const { permission, startDate, endDate } = filter;
-  
-    const where: WhereOptions<any> = {};
-  
-    if (permission) {
-      where.permission = { [Op.eq]: permission };
-    }
-  
-    if (startDate && endDate) {
-      where.createdAt = {
-        [Op.between]: [new Date(startDate), new Date(endDate)],
-      };
-    }
-  
-    if (startDate && !endDate) {
-      return { success: false, message: 'A data final é necessária.' };
-    }
-    
-    if (!startDate && endDate) {
-      return { success: false, message: 'A data de início é necessária.' };
-    }
-    
-  
-    return await this.userModel.findAll({
-      where,
-      order: [['createdAt', 'DESC']],
-    });
+
+async getUsersWithFilter(filter: IsearchUserFilter): Promise<any> {
+  const { permission, startDate, endDate } = filter;
+
+  const conditions: any[] = [];
+
+  if (permission) {
+    conditions.push({ permission: { [Op.eq]: permission } });
   }
+
+  if (startDate && endDate) {
+    conditions.push(
+      Sequelize.where(
+        Sequelize.fn('DATE', Sequelize.col('created_at')),
+        {
+          [Op.between]: [startDate, endDate], // 'YYYY-MM-DD'
+        }
+      )
+    );
+  }
+
+  if (startDate && !endDate) {
+    return { success: false, message: 'A data final é necessária.' };
+  }
+
+  if (!startDate && endDate) {
+    return { success: false, message: 'A data de início é necessária.' };
+  }
+
+  const users = await this.userModel.findAll({
+    where: {
+      [Op.and]: conditions,
+    },
+    order: [['createdAt', 'DESC']],
+  });
+
+  return { success: true, data: users };
+}
+
   
 }
