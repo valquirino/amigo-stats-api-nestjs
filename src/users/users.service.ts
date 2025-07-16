@@ -147,7 +147,10 @@ export class UsersService {
     } else if (user.permission === 'approved') {
       updateData.role = 'admin';
       actionDescription = `${adminName} promoveu o usuário ${user.name} para administrador.`;
-    } else {
+    } else if (user.permission==='rejected'){
+      updateData.permission='pending'
+    }
+     else {
       throw new BadRequestException('Permissão inválida para alteração');
     }
 
