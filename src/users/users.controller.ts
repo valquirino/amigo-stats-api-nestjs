@@ -52,6 +52,7 @@ export class UsersController {
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
   @ApiBody({ type: UpdateUserDto })
   update(@Body() updateUserDto: UpdateUserDto) {
+  
     return this.usersService.update(
       this.request.user.userId,
       updateUserDto,

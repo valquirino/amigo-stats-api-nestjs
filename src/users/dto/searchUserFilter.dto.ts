@@ -13,4 +13,7 @@ export class SearchUserFilterDTO {
   @IsDateString()
   endDate?: string; 
 
+  @IsOptional()
+  name?:string
+
 }

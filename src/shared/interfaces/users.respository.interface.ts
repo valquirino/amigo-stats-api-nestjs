@@ -27,6 +27,7 @@ export interface IsearchUserFilter {
   startDate?:string
   endDate?:string
   permission? :'approved' | 'pending' | 'rejected'
+  name?:string
 }
 export interface IUsersRepository {
   create(data: ICreateUserData): Promise<IUserAttributes>;
