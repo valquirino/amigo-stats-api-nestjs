@@ -126,35 +126,56 @@ export class UsersService {
     return this.usersRepository.findOne({ id });
   }
 
-
   async findPending() {
     const allUsers = await this.findAll();
-    return allUsers?.filter(user => user.permission === 'pending') || [];
+    return allUsers?.filter((user) => user.permission === 'pending') || [];
   }
 
-  async allowRequest(id: number) {
-    const user = await this.usersRepository.findOne({ id })
-    if (!user) throw new NotFoundException('Usuário não encontrado');
+  async allowRequest(id: number, adminName: string) {
+    const user = await this.usersRepository.findOne({ id });
 
-    return this.usersRepository.update({ permission: 'approved' },{id})
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
     }
 
-    async forbidRequest(id: number) {
-      const user = await this.usersRepository.findOne({ id })
+    let updateData: any = {};
+    let actionDescription = '';
 
-      if (!user) throw new NotFoundException('Usuário não encontrado');
+    if (user.permission === 'pending') {
+      updateData.permission = 'approved';
+      actionDescription = `${adminName} aprovou o usuário ${user.name}.`;
+    } else if (user.permission === 'approved') {
+      updateData.role = 'admin';
+      actionDescription = `${adminName} promoveu o usuário ${user.name} para administrador.`;
+    } else {
+      throw new BadRequestException('Permissão inválida para alteração');
+    }
 
-      if(user.permission==='rejected'){
-        return this.usersRepository.delete({id:user.id})
-      }
+    await this.usersRepository.update(updateData, { id });
 
-      return this.usersRepository.update( { permission: 'rejected' }, { id });
-      }
+    await this.activityRepository.create({
+      user: adminName,
+      actionType: 'update',
+      entity: 'user',
+      description: actionDescription,
+    });
 
-   async getUsersWithFilter(filter:SearchUserFilterDTO){
-    return this.usersRepository.getUsersWithFilter(filter)
-   }
+    return { mensagem: 'Usuário atualizado com sucesso.' };
+  }
 
+  async forbidRequest(id: number) {
+    const user = await this.usersRepository.findOne({ id });
 
-  
+    if (!user) throw new NotFoundException('Usuário não encontrado');
+
+    if (user.permission === 'rejected') {
+      return this.usersRepository.delete({ id: user.id });
+    }
+
+    return this.usersRepository.update({ permission: 'rejected' }, { id });
+  }
+
+  async getUsersWithFilter(filter: SearchUserFilterDTO) {
+    return this.usersRepository.getUsersWithFilter(filter);
+  }
 }
