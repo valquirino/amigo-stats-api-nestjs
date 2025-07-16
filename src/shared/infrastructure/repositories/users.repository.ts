@@ -67,7 +67,7 @@ export class UsersRepository implements IUsersRepository {
 async getUsersWithFilter(filter: IsearchUserFilter): Promise<any> {
   const { permission, startDate, endDate, name  } = filter;
 
-  const conditions: any[] = [];
+  const conditions: any[] = [{ role: { [Op.eq]: 'user' } }];
 
   if (permission) {
     conditions.push({ permission: { [Op.eq]: permission } });

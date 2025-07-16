@@ -128,7 +128,7 @@ export class UsersService {
 
   async findPending() {
     const allUsers = await this.findAll();
-    return allUsers?.filter((user) => user.permission === 'pending') || [];
+     allUsers?.filter((user) => user.permission === 'pending') || [];
   }
 
   async allowRequest(id: number, adminName: string) {
