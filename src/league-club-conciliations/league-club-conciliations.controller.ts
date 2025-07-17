@@ -1,0 +1,34 @@
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { LeagueClubConciliationsService } from './league-club-conciliations.service';
+import { CreateLeagueClubConciliationDto } from './dto/create-league-club-conciliation.dto';
+import { UpdateLeagueClubConciliationDto } from './dto/update-league-club-conciliation.dto';
+
+@Controller('league-club-conciliations')
+export class LeagueClubConciliationsController {
+  constructor(private readonly leagueClubConciliationsService: LeagueClubConciliationsService) {}
+
+  @Post()
+  create(@Body() createLeagueClubConciliationDto: CreateLeagueClubConciliationDto) {
+    return this.leagueClubConciliationsService.create(createLeagueClubConciliationDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.leagueClubConciliationsService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.leagueClubConciliationsService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateLeagueClubConciliationDto: UpdateLeagueClubConciliationDto) {
+    return this.leagueClubConciliationsService.update(+id, updateLeagueClubConciliationDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.leagueClubConciliationsService.remove(+id);
+  }
+}
