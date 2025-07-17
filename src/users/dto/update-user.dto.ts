@@ -17,6 +17,8 @@ export class UpdateUserDto {
   @IsBoolean({ message: 'O status de verificação deve ser um valor booleano.' })
   isChanged?: boolean;
 
+
+  @IsOptional()
   @IsIn(['admin','user',])
   role: string
 }
