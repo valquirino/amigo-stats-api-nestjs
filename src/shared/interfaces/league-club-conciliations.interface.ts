@@ -7,7 +7,7 @@ export interface ICreateLeagueClubConciliationData {
 }
 
 export type IFilterLeagueClubConciliationData =
-  Partial<ICreateLeagueClubConciliationData>;
+  Partial<ICreateLeagueClubConciliationData> & { id?: number };
 
 export interface ILeagueClubConciliationsRepository {
   create(

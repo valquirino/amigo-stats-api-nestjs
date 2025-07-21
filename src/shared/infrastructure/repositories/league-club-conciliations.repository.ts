@@ -7,6 +7,10 @@ import {
   IFilterLeagueClubConciliationData,
 } from 'src/shared/interfaces/league-club-conciliations.interface';
 import { ILeagueClubConciliationAttributes } from '../database/models/league-club-conciliations.model';
+import { Club } from '../database/models/club.model';
+import { League } from '../database/models/league.model';
+
+import { Includeable, WhereOptions } from 'sequelize';
 
 @Injectable()
 export class LeagueClubConciliationsRepository
@@ -18,7 +22,7 @@ export class LeagueClubConciliationsRepository
   ) {}
 
   async create(data: ICreateLeagueClubConciliationData): Promise<ILeagueClubConciliationAttributes> {
-    return this.conciliationModel.create(data);
+    return this.conciliationModel.create(data as any);
   }
 
   async findAll(): Promise<ILeagueClubConciliationAttributes[]> {
@@ -28,14 +32,36 @@ export class LeagueClubConciliationsRepository
   async findOne(filter: IFilterLeagueClubConciliationData): Promise<ILeagueClubConciliationAttributes | null> {
     return this.conciliationModel.findOne({ where: filter });
   }
-
   async findManyWithFilter(
     filter: IFilterLeagueClubConciliationData,
   ): Promise<ILeagueClubConciliationAttributes[]> {
-    return this.conciliationModel.findAll({ where: filter });
+    const { clubId, leagueId, year } = filter;
+  
+    const where: WhereOptions = {};
+    if (year) {
+      where['year'] = year;
+    }
+  
+    const include: Includeable[] = [
+      {
+        model: Club,
+        as: 'club',
+        ...(clubId && { where: { id: clubId } }),
+      },
+      {
+        model: League,
+        as: 'league',
+        ...(leagueId && { where: { id: leagueId } }),
+      },
+    ];
+  
+    return this.conciliationModel.findAll({
+      where,
+      include,
+    });
   }
 
-  async update(data: ILeagueClubConciliationAttributes, id: number): Promise<any> {
+  async update(data: Partial<ILeagueClubConciliationAttributes>, id: number): Promise<any> {
     return this.conciliationModel.update(data, {
       where: { id },
     });

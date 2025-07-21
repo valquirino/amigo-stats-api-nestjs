@@ -1,4 +1,23 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateLeagueClubConciliationDto } from './create-league-club-conciliation.dto';
+import { IsInt, IsOptional, IsPositive } from 'class-validator';
 
-export class UpdateLeagueClubConciliationDto extends PartialType(CreateLeagueClubConciliationDto) {}
+export class UpdateLeagueClubConciliationDto {
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  id?: number;
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  leagueId?: number;
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  clubId?: number;
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  year?: number;
+}

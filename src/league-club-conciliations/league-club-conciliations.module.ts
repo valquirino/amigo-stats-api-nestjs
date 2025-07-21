@@ -4,10 +4,11 @@ import { LeagueClubConciliationsController } from './league-club-conciliations.c
 import { DatabaseModule } from 'src/shared/infrastructure/database/database.module';
 import { League } from 'src/shared/infrastructure/database/models/league.model';
 import { LeagueClubConciliation } from 'src/shared/infrastructure/database/models/league-club-conciliations.model';
+import { LeagueClubConciliationsRepository } from 'src/shared/infrastructure/repositories/league-club-conciliations.repository';
 
 @Module({
    imports: [DatabaseModule.forFeature([LeagueClubConciliation])],
   controllers: [LeagueClubConciliationsController],
-  providers: [LeagueClubConciliationsService],
+  providers: [LeagueClubConciliationsService,LeagueClubConciliationsRepository],
 })
 export class LeagueClubConciliationsModule {}

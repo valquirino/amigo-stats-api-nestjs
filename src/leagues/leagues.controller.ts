@@ -27,4 +27,10 @@ export class LeaguesController {
   remove(@Param('id') id: string) {
     return this.leaguesService.remove(+id);
   }
+
+  @Get(':id')
+  findById(@Param('id') id: string) {
+    return this.leaguesService.findById(+id)
+  }
+  
 }

@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { CreateLeagueClubConciliationDto } from './dto/create-league-club-conciliation.dto';
 import { UpdateLeagueClubConciliationDto } from './dto/update-league-club-conciliation.dto';
+import { LeagueClubConciliationsRepository } from '../shared/infrastructure/repositories/league-club-conciliations.repository';
 
 @Injectable()
 export class LeagueClubConciliationsService {
-  create(createLeagueClubConciliationDto: CreateLeagueClubConciliationDto) {
-    return 'This action adds a new leagueClubConciliation';
+  constructor(
+    private readonly repository: LeagueClubConciliationsRepository,
+  ) {}
+
+  create(createDto: CreateLeagueClubConciliationDto) {
+    return this.repository.create(createDto);
   }
 
   findAll() {
-    return `This action returns all leagueClubConciliations`;
+    return this.repository.findAll();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} leagueClubConciliation`;
+    return this.repository.findOne({ id });
   }
 
-  update(id: number, updateLeagueClubConciliationDto: UpdateLeagueClubConciliationDto) {
-    return `This action updates a #${id} leagueClubConciliation`;
+  update(id: number, updateDto: UpdateLeagueClubConciliationDto) {
+    return this.repository.update(updateDto, id);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} leagueClubConciliation`;
+    return this.repository.delete(id);
   }
 }

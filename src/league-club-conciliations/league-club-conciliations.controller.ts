@@ -9,6 +9,7 @@ export class LeagueClubConciliationsController {
 
   @Post()
   create(@Body() createLeagueClubConciliationDto: CreateLeagueClubConciliationDto) {
+    console.log
     return this.leagueClubConciliationsService.create(createLeagueClubConciliationDto);
   }
 
@@ -31,4 +32,5 @@ export class LeagueClubConciliationsController {
   remove(@Param('id') id: string) {
     return this.leagueClubConciliationsService.remove(+id);
   }
+
 }
