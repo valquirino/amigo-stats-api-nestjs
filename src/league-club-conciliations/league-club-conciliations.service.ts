@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateLeagueClubConciliationDto } from './dto/create-league-club-conciliation.dto';
 import { UpdateLeagueClubConciliationDto } from './dto/update-league-club-conciliation.dto';
 import { LeagueClubConciliationsRepository } from '../shared/infrastructure/repositories/league-club-conciliations.repository';
+import { FilterLeagueClubConciliationDto } from './dto/filter-league-club-conciliation.dto';
 
 @Injectable()
 export class LeagueClubConciliationsService {
@@ -28,4 +29,11 @@ export class LeagueClubConciliationsService {
   remove(id: number) {
     return this.repository.delete(id);
   }
+
+  findAllWithFilter(filterLeagueClubConciliationDto:FilterLeagueClubConciliationDto) {
+    return this.repository.findManyWithFilter(filterLeagueClubConciliationDto)
+
+  }
+
+
 }

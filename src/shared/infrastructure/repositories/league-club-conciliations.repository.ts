@@ -35,6 +35,7 @@ export class LeagueClubConciliationsRepository
   async findManyWithFilter(
     filter: IFilterLeagueClubConciliationData,
   ): Promise<ILeagueClubConciliationAttributes[]> {
+    
     const { clubId, leagueId, year } = filter;
   
     const where: WhereOptions = {};
