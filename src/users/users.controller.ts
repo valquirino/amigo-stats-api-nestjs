@@ -95,7 +95,6 @@ export class UsersController {
 
   @Put('approve-requests/:id')
   async allowRequests(@Param('id') id: string) {
-    console.log('adminname',this.request.user.name)
     return this.usersService.allowRequest(+id,this.request.user.name);
   }
 ;  

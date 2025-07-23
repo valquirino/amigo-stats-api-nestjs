@@ -9,6 +9,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ActivityModule } from './activities/activities.module';
+import { LeaguesModule } from './leagues/leagues.module';
+import { LeagueClubConciliationsModule } from './league-club-conciliations/league-club-conciliations.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { ActivityModule } from './activities/activities.module';
     ClubsModule,
     DashboardModule,
     ActivityModule,
+    LeaguesModule,
+    LeagueClubConciliationsModule,
   ],
   providers: [
     {
