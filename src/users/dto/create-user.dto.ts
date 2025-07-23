@@ -1,10 +1,10 @@
-import { IsString, IsEmail, MinLength, IsNotEmpty, IsIn } from 'class-validator';
+import { IsString, IsEmail, MinLength, IsNotEmpty, IsOptional, IsBoolean, IsIn } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'João da Silva', description: 'Nome do usuário' })
   @IsString()
-  @IsNotEmpty({ message: 'O nome é obrigatório.' })
+  @IsOptional()
   name: string;
 
   @ApiProperty({ example: 'joao@email.com', description: 'E-mail do usuário' })
@@ -20,9 +20,15 @@ export class CreateUserDto {
 
   @ApiProperty({ example: 'admin', description: 'Papel ou função do usuário no sistema' })
   @IsString()
+  @IsOptional()
   @IsNotEmpty({ message: 'O papel é obrigatório.' })
   role:string;
 
-    @IsIn(['pending', 'approved','rejected'])
-    permission:'pending' | 'approved'| 'rejected';
+  @IsIn(['pending', 'approved','rejected'])
+  permission:'pending' | 'approved'| 'rejected';
+
+  @ApiProperty({ example: true, description: 'Status de verificação do usuário', required: false })
+  @IsOptional()
+  @IsBoolean({ message: 'O status de verificação deve ser um valor booleano.' })
+  isChanged?: boolean;
 }

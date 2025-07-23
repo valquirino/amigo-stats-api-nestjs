@@ -10,7 +10,7 @@ import {
 export interface IActivityAttributes {
   id: number;
   user: string;
-  actionType: 'create' | 'edit' | 'delete';
+  actionType: 'create' | 'edit' | 'delete' |'update';
   entity: string;
   description: string;
   date: Date;
@@ -32,11 +32,11 @@ export class Activity extends Model<IActivityAttributes> {
   declare user: string;
 
   @Column({
-    type: DataType.ENUM('create', 'edit', 'delete'),
+    type: DataType.ENUM('create', 'edit', 'delete','update'),
     allowNull: false,
     field: 'action_type',
   })
-  declare actionType: 'create' | 'edit' | 'delete';
+  declare actionType: 'create' | 'edit' | 'delete' | 'update';s
 
   @Column({ type: DataType.STRING, allowNull: false })
   declare entity: string;

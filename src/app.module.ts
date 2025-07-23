@@ -9,7 +9,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ActivityModule } from './activities/activities.module';
-
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),

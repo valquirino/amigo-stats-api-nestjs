@@ -17,7 +17,9 @@ export interface IUserAttributes {
   createdAt?: Date;
   deletedAt?: Date | null;
   role: string;
-  permission : 'pending' | 'approved' | 'rejected'
+  permission : 'pending' | 'approved' | 'rejected';
+  isChanged :boolean;
+  
 }
 
 @Table({
@@ -39,7 +41,7 @@ export class User extends Model<IUserAttributes> {
   declare id: number;
 
   @Column({
-    allowNull: false,
+    allowNull: true,
     type: DataType.STRING,
   })
   declare name: string;
@@ -69,7 +71,7 @@ export class User extends Model<IUserAttributes> {
   declare deletedAt: Date | null;
 
   @Column({
-    allowNull: false,
+    allowNull: true,
     type: DataType.STRING,
   })
   declare role: string
@@ -80,4 +82,11 @@ export class User extends Model<IUserAttributes> {
   })
   declare permission: 'pending' | 'approved' | 'rejected';
 
+  @Column({
+    allowNull: false,
+    type: DataType.BOOLEAN,
+    field: 'is_changed',
+    defaultValue: false,
+  })
+  declare isChanged: boolean;
 }

@@ -8,6 +8,7 @@ import {
   ApiResponse,
   ApiBody,
 } from '@nestjs/swagger';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -23,6 +24,17 @@ export class AuthController {
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
   }
+  @Public()
+  @Post('request-access')
+  requestAccess(@Body() dto:CreateUserDto){
+    return this.authService.registerUserWIthAcess(dto)
+  }
 
-  
+  @Public()
+  @Post('generate-new-password')
+  generateNewPassword(@Body() body: { email: string }){
+    return this.authService.generateNewPassword(body.email)
+  }
+
+
 }

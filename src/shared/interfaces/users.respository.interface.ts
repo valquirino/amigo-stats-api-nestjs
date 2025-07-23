@@ -6,6 +6,7 @@ export interface ICreateUserData {
   password: string;
   role:string;
   permission : 'pending' | 'approved' | 'rejected';
+  isChanged?: boolean;
 }
 
 export interface IUserFilter {
@@ -21,6 +22,16 @@ export interface IUserUpdatepa {
   name: string;
   email: string;
 }
+
+export interface IsearchUserFilter {
+  startDate?:string
+  endDate?:string
+  permission? :'approved' | 'pending' | 'rejected'
+  name?:string
+}
+export interface IUserUpdatePassword {
+  password :string
+}
 export interface IUsersRepository {
   create(data: ICreateUserData): Promise<IUserAttributes>;
   findOne(filter: IUserFilter): Promise<IUserAttributes | null>;
@@ -29,4 +40,6 @@ export interface IUsersRepository {
   delete(filter: IUserFilter): Promise<any>;
   findByEmail(email: string): Promise<IUserAttributes | null>;
   renderUserProfile(filter: IGetUserById): Promise<IUserAttributes | null>;
+  getUsersWithFilter(filter:IsearchUserFilter): Promise<any>
+  updatePassword(data: IUserUpdatePassword, filter: IUserFilter): Promise<any>;
 }

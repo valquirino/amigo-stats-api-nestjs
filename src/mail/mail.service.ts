@@ -13,11 +13,9 @@ export class MailgunService {
     const MAILGUN_KEY =process.env.MAILGUN_KEY!;
     const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN!;
 
-    console.log(MAILGUN_KEY);
-
     this.client = new Mailgun(FormData).client({
       username: 'api',
-      key: this.MAILGUN_KEY,
+      key: MAILGUN_KEY,
     });
   }
 

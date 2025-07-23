@@ -1,3 +1,4 @@
+import { UpdatForgotPasswordrDto } from './dto/update-forgot-password.dto';
 import { ActivityRepository } from 'src/shared/infrastructure/repositories/activities.repository';
 import {
   Injectable,
@@ -10,6 +11,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdatePasswordrDto } from './dto/update-password.dto';
+import { SearchUserFilterDTO } from './dto/searchUserFilter.dto';
 
 @Injectable()
 export class UsersService {
@@ -122,6 +124,83 @@ export class UsersService {
     const newPassword = await bcrypt.hash(updateUserPassword.newPassword, 10);
 
     await this.usersRepository.update({ password: newPassword }, { id });
+    return this.usersRepository.findOne({ id });
+  }
+
+  async findPending() {
+    const allUsers = await this.findAll();
+     allUsers?.filter((user) => user.permission === 'pending') || [];
+  }
+
+  async allowRequest(id: number, adminName: string) {
+    const user = await this.usersRepository.findOne({ id });
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    let updateData: any = {};
+    let actionDescription = '';
+
+    if (user.permission === 'pending') {
+      updateData.permission = 'approved';
+      actionDescription = `${adminName} aprovou o usuário ${user.name}.`;
+    } else if (user.permission === 'approved') {
+      updateData.role = 'admin';
+      actionDescription = `${adminName} promoveu o usuário ${user.name} para administrador.`;
+    } else if (user.permission==='rejected'){
+      updateData.permission='pending'
+    }
+     else {
+      throw new BadRequestException('Permissão inválida para alteração');
+    }
+
+    await this.usersRepository.update(updateData, { id });
+
+    await this.activityRepository.create({
+      user: adminName,
+      actionType: 'update',
+      entity: 'user',
+      description: actionDescription,
+    });
+
+    return { mensagem: 'Usuário atualizado com sucesso.' };
+  }
+
+  async forbidRequest(id: number) {
+    const user = await this.usersRepository.findOne({ id });
+
+    if (!user) throw new NotFoundException('Usuário não encontrado');
+
+    if (user.permission === 'rejected') {
+      return this.usersRepository.delete({ id: user.id });
+    }
+
+    return this.usersRepository.update({ permission: 'rejected' }, { id });
+  }
+
+  async getUsersWithFilter(filter: SearchUserFilterDTO) {
+    return this.usersRepository.getUsersWithFilter(filter);
+  }
+  
+  async updateForgotPassword(
+    id: number,
+    updatForgotPasswordrDto: UpdatForgotPasswordrDto,
+  ) {
+    const user = await this.usersRepository.findOne({ id });
+
+    if (!user) {
+      throw new NotFoundException(`Usuário com id ${id} não encontrado.`);
+    }
+    const hashedPassword = await bcrypt.hash(
+      updatForgotPasswordrDto.temporaryPassword,
+      10,
+    );
+
+    await this.usersRepository.update(
+      { password: hashedPassword, isChanged: true },
+      { id },
+    );
     return this.usersRepository.findOne({ id });
   }
 }

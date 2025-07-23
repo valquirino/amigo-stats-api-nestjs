@@ -1,15 +1,18 @@
-import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { ITokenPayload } from 'src/shared/interfaces/token-payload.interface';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { MailgunService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private readonly mailService: MailgunService,
   ) {}
 
   async login(dto: LoginDto) {
@@ -26,14 +29,15 @@ export class AuthService {
     }
 
     if(user.permission!== 'approved') {
-      throw new ForbiddenException('Sua conta ainda não foi aprovada,para isso solicite acesso no botao abaixo ');
+      throw new ForbiddenException('Sua conta ainda não foi aprovada ');
     }
 
     const payload: ITokenPayload = {
       userId: user.id,
       email: user.email,
       name: user.name,
-      role:user.role,
+      role: user.role,
+      isChanged: user.isChanged,
     };
 
     const token = this.jwtService.sign(payload);
@@ -44,4 +48,29 @@ export class AuthService {
     };
  
   }
+
+  async registerUserWIthAcess(dto: CreateUserDto) {
+    // const user = await this.usersService.findByEmail(dto.email);
+
+    // if (user) {
+    //   throw new UnauthorizedException('Usuário já existe e esta a esperando pela permissao dos admins');
+    // }
+    
+    return await this.usersService.create(dto)
+  }
+  async generateNewPassword(email: string) {
+    const user = await this.usersService.findByEmail(email);
+    if (!user) throw new BadRequestException('Usuário não encontrado');
+
+    const newPassword = Math.floor(100000 + Math.random() * 900000).toString();
+
+    await this.usersService.updateForgotPassword(user.id, {
+      temporaryPassword: newPassword,
+    });
+    
+    await this.mailService.sendNewPasswordEmail(user.email, user.name, newPassword);
+
+    return { message: 'Uma nova senha foi enviada para o seu e-mail.' };
+  }
+
 }
