@@ -42,23 +42,18 @@ export class LeagueClubConciliationsRepository
     if (year) {
       where['year'] = year;
     }
-  
-    const include: Includeable[] = [
-      {
-        model: Club,
-        as: 'club',
-        ...(clubId && { where: { id: clubId } }),
-      },
-      {
-        model: League,
-        as: 'league',
-        ...(leagueId && { where: { id: leagueId } }),
-      },
-    ];
+
+    if (clubId) {
+      where.club_id = clubId
+    }
+
+    if (leagueId) {
+      where.league_id = leagueId
+    }
+
   
     return this.conciliationModel.findAll({
       where,
-      include,
     });
   }
 
