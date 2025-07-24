@@ -1,23 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Mailgun from 'mailgun.js';
-import FormData from 'form-data';
+import * as FormData from 'form-data';
 
 @Injectable()
 export class MailgunService {
+  
   private readonly MAILGUN_KEY: string;
   private readonly MAILGUN_DOMAIN: string;
   private readonly client;
 
   constructor(private readonly config: ConfigService) {
-    const MAILGUN_KEY =process.env.MAILGUN_KEY!;
-    const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN!;
-
-    this.client = new Mailgun(FormData).client({
+    this.MAILGUN_KEY = this.config.get<string>('MAILGUN_KEY')!;
+    this.MAILGUN_DOMAIN = this.config.get<string>('MAILGUN_DOMAIN')!;
+  
+    const mailgun = new Mailgun(FormData);
+    this.client = mailgun.client({
       username: 'api',
-      key: MAILGUN_KEY,
+      key: this.MAILGUN_KEY,
     });
   }
+  
 
   /**
    * Envio genérico de e-mails via Mailgun API
@@ -43,7 +46,7 @@ export class MailgunService {
    * Envio de e-mail com nova senha temporária
    */
   async sendNewPasswordEmail(email: string, name: string, password: string) {
-    const from = `AmigoStats <no-reply@${this.MAILGUN_DOMAIN}>`;
+    const from = `duduroma2024@gmail.com`;
 
     const html = `
       <p>Olá ${name},</p>
