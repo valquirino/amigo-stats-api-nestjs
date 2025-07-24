@@ -29,6 +29,9 @@ export interface IsearchUserFilter {
   permission? :'approved' | 'pending' | 'rejected'
   name?:string
 }
+export interface IUserUpdatePassword {
+  password :string
+}
 export interface IUsersRepository {
   create(data: ICreateUserData): Promise<IUserAttributes>;
   findOne(filter: IUserFilter): Promise<IUserAttributes | null>;
@@ -38,4 +41,5 @@ export interface IUsersRepository {
   findByEmail(email: string): Promise<IUserAttributes | null>;
   renderUserProfile(filter: IGetUserById): Promise<IUserAttributes | null>;
   getUsersWithFilter(filter:IsearchUserFilter): Promise<any>
+  updatePassword(data: IUserUpdatePassword, filter: IUserFilter): Promise<any>;
 }

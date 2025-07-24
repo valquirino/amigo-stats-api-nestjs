@@ -1,3 +1,4 @@
+import { UpdatForgotPasswordrDto } from './dto/update-forgot-password.dto';
 import { ActivityRepository } from 'src/shared/infrastructure/repositories/activities.repository';
 import {
   Injectable,
@@ -180,5 +181,26 @@ export class UsersService {
 
   async getUsersWithFilter(filter: SearchUserFilterDTO) {
     return this.usersRepository.getUsersWithFilter(filter);
+  }
+  
+  async updateForgotPassword(
+    id: number,
+    updatForgotPasswordrDto: UpdatForgotPasswordrDto,
+  ) {
+    const user = await this.usersRepository.findOne({ id });
+
+    if (!user) {
+      throw new NotFoundException(`Usuário com id ${id} não encontrado.`);
+    }
+    const hashedPassword = await bcrypt.hash(
+      updatForgotPasswordrDto.temporaryPassword,
+      10,
+    );
+
+    await this.usersRepository.update(
+      { password: hashedPassword, isChanged: true },
+      { id },
+    );
+    return this.usersRepository.findOne({ id });
   }
 }

@@ -1,16 +1,18 @@
-import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { ITokenPayload } from 'src/shared/interfaces/token-payload.interface';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { MailgunService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private readonly mailService: MailgunService,
   ) {}
 
   async login(dto: LoginDto) {
@@ -56,4 +58,19 @@ export class AuthService {
     
     return await this.usersService.create(dto)
   }
+  async generateNewPassword(email: string) {
+    const user = await this.usersService.findByEmail(email);
+    if (!user) throw new BadRequestException('Usuário não encontrado');
+
+    const newPassword = Math.floor(100000 + Math.random() * 900000).toString();
+
+    await this.usersService.updateForgotPassword(user.id, {
+      temporaryPassword: newPassword,
+    });
+    
+    await this.mailService.sendNewPasswordEmail(user.email, user.name, newPassword);
+
+    return { message: 'Uma nova senha foi enviada para o seu e-mail.' };
+  }
+
 }

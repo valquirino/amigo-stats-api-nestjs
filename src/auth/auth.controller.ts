@@ -30,4 +30,11 @@ export class AuthController {
     return this.authService.registerUserWIthAcess(dto)
   }
 
+  @Public()
+  @Post('generate-new-password')
+  generateNewPassword(@Body() body: { email: string }){
+    return this.authService.generateNewPassword(body.email)
+  }
+
+
 }

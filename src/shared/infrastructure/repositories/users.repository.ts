@@ -5,6 +5,7 @@ import {
   IGetUserById,
   IsearchUserFilter,
   IUsersRepository,
+  IUserUpdatePassword,
 } from 'src/shared/interfaces/users.respository.interface';
 import { IUserAttributes } from '../database/models/user.model';
 import {
@@ -63,7 +64,6 @@ export class UsersRepository implements IUsersRepository {
     });
   }
 
-
 async getUsersWithFilter(filter: IsearchUserFilter): Promise<any> {
   const { permission, startDate, endDate, name  } = filter;
 
@@ -107,4 +107,9 @@ async getUsersWithFilter(filter: IsearchUserFilter): Promise<any> {
 }
 
   
+  updatePassword(data: IUserUpdatePassword, filter: IUserFilter): Promise<any> {
+    return this.userModel.update(data, {
+      where: filter as WhereOptions<IUserAttributes>,
+    });
+  }
 }

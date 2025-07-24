@@ -17,8 +17,9 @@ export interface IUserAttributes {
   createdAt?: Date;
   deletedAt?: Date | null;
   role: string;
-  isChanged: boolean;
-  permission : 'pending' | 'approved' | 'rejected'
+  permission : 'pending' | 'approved' | 'rejected';
+  isChanged :boolean;
+  
 }
 
 @Table({
@@ -85,7 +86,7 @@ export class User extends Model<IUserAttributes> {
     allowNull: false,
     type: DataType.BOOLEAN,
     field: 'is_changed',
-    defaultValue: true,
+    defaultValue: false,
   })
   declare isChanged: boolean;
 }
